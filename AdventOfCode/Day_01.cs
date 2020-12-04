@@ -60,6 +60,8 @@ namespace AdventOfCode
                 }
             }
 
+            numbers.Sort();
+
             return numbers;
         }
     }

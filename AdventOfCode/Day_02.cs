@@ -26,7 +26,7 @@ namespace AdventOfCode
 
         private bool Valid(PEntry entry)
         {
-            int num = entry.Password.Where((c) => c == entry.Character).Count();
+            int num = entry.Password.Count((c) => c == entry.Character);
 
             return num >= entry.LowRange && num <= entry.HighRange;
         }
