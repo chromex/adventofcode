@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace AdventOfCode
@@ -19,6 +21,70 @@ namespace AdventOfCode
             {
                 fieldInfo.SetValue(obj, val);
             }
+        }
+
+        public static List<int> ParseNumbers(string[] lines)
+        {
+            return lines.Select(str => int.Parse(str)).ToList();
+        }
+
+        public static List<string> ParseRecords(string[] lines, string seperator)
+        {
+            List<string> results = new List<string>();
+            string sum = string.Empty;
+
+            foreach (string line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    if (!string.IsNullOrEmpty(sum))
+                    {
+                        results.Add(sum);
+                        sum = string.Empty;
+                    }
+                }
+                else
+                {
+                    sum = $"{sum}{seperator}{line}";
+                }
+            }
+
+            if (!string.IsNullOrEmpty(sum))
+            {
+                results.Add(sum);
+            }
+
+            return results;
+        }
+
+        public static List<List<string>> ParseSets(string[] lines)
+        {
+            List<List<string>> results = new List<List<string>>();
+
+            List<string> current = new List<string>();
+
+            foreach (string line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    if (current.Count > 0)
+                    {
+                        results.Add(current);
+                        current = new List<string>();
+                    }
+                }
+                else
+                {
+                    current.Add(line);
+                }
+            }
+
+            if (current.Count > 0)
+            {
+                results.Add(current);
+            }
+
+            return results;
         }
     }
 }

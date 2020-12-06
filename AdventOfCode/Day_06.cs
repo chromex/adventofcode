@@ -1,4 +1,5 @@
 ﻿using AoCHelper;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -15,56 +16,27 @@ namespace AdventOfCode
 
         public override string Solve_1()
         {
-            int sum = 0;
-            string ans = string.Empty;
+            List<string> records = Util.ParseRecords(lines, string.Empty);
 
-            foreach (string line in lines)
-            {
-                if (line.Length == 0)
-                {
-                    sum += ans.Distinct().Count();
-                    ans = string.Empty;
-                }
-                else
-                {
-                    ans = ans + line;
-                }
-            }
-
-            sum += ans.Distinct().Count();
-
-            return $"{sum}";
+            return $"{records.Select(str => str.Distinct().Count()).Sum()}";
         }
 
         public override string Solve_2()
         {
+            var sets = Util.ParseSets(lines);
+
             int sum = 0;
-            string ans = string.Empty;
-            bool fresh = true;
-
-            foreach (string line in lines)
+            foreach (List<string> set in sets)
             {
-                if (line.Length == 0)
-                {
-                    sum += ans.Length;
-                    ans = string.Empty;
-                    fresh = true;
-                }
-                else
-                {
-                    if (fresh)
-                    {
-                        ans = line;
-                        fresh = false;
-                    }
-                    else
-                    {
-                        ans = new string(ans.Intersect(line).ToArray());
-                    }
-                }
-            }
+                string ans = set[0];
 
-            sum += ans.Length;
+                foreach (string s in set)
+                {
+                    ans = new string(ans.Intersect(s).ToArray());
+                }
+
+                sum += ans.Length;
+            }
 
             return $"{sum}";
         }
