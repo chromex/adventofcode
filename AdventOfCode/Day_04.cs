@@ -27,28 +27,20 @@ namespace AdventOfCode
 
         private void LoadPassports()
         {
-            string[] lines = File.ReadAllLines(InputFilePath);
+            List<string> records = Util.ParseRecords(File.ReadAllLines(InputFilePath), " ");
 
-            Passport current = new Passport();
-
-            foreach (string line in lines)
+            foreach (string record in records)
             {
-                if (string.IsNullOrEmpty(line))
-                {
-                    passports.Add(current);
-                    current = new Passport();
-                }
-                else
-                {
-                    string[] split = line.Split(" ");
-                    foreach (string s in split)
-                    {
-                        RegisterValue(s, current);
-                    }
-                }
-            }
+                Passport current = new Passport();
 
-            passports.Add(current);
+                string[] split = record.Split(" ");
+                foreach (string s in split)
+                {
+                    RegisterValue(s, current);
+                }
+
+                passports.Add(current);
+            }
         }
 
         private void RegisterValue(string entry, Passport p)

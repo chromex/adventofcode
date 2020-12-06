@@ -32,6 +32,7 @@ namespace AdventOfCode
         {
             List<string> results = new List<string>();
             string sum = string.Empty;
+            bool first = true;
 
             foreach (string line in lines)
             {
@@ -42,10 +43,20 @@ namespace AdventOfCode
                         results.Add(sum);
                         sum = string.Empty;
                     }
+
+                    first = true;
                 }
                 else
                 {
-                    sum = $"{sum}{seperator}{line}";
+                    if (first)
+                    {
+                        sum = line;
+                        first = false;
+                    }
+                    else
+                    {
+                        sum = $"{sum}{seperator}{line}";
+                    }
                 }
             }
 
