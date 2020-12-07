@@ -16,7 +16,9 @@ namespace AdventOfCode
             { '(', Symbol.LParen },
             { ')', Symbol.RParen },
             { ':', Symbol.Colon },
-            { '.', Symbol.Period }
+            { '.', Symbol.Period },
+            { '+', Symbol.Plus },
+            { '-', Symbol.Minus }
         };
 
         public Lexer(string line)

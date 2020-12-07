@@ -5,13 +5,13 @@ using System.Linq;
 
 namespace AdventOfCode
 {
-    public class Day_02 : BaseDay
+    public class Day_02 : BetterBaseDay
     {
         private readonly List<PEntry> passwords;
 
         public Day_02()
         {
-            passwords = GetPasswordEntries();
+            passwords = Input.Select(line => ParsePEntry(line)).ToList();
         }
 
         public override string Solve_1()
@@ -49,50 +49,27 @@ namespace AdventOfCode
             return false;
         }
 
-        private List<PEntry> GetPasswordEntries()
-        {
-            string[] lines = File.ReadAllLines(InputFilePath);
-            List<PEntry> numbers = new List<PEntry>();
-            foreach (string line in lines)
-            {
-                if (string.IsNullOrEmpty(line))
-                {
-                    continue;
-                }
-
-                numbers.Add(ParsePEntry(line));
-            }
-
-            return numbers;
-        }
-
         private PEntry ParsePEntry(string line)
         {
-            string[] splits = line.Split(' ');
-            string[] rangeSplit = splits[0].Split('-');
+            Parser p = new Parser(line);
+            PEntry entry = new PEntry();
 
-            int rangeStart = int.Parse(rangeSplit[0]);
-            int rangeEnd = int.Parse(rangeSplit[1]);
-            char c = splits[1][0];
-            string password = splits[2];
+            entry.LowRange = p.GetNumber();
+            p.Burn();
+            entry.HighRange = p.GetNumber();
+            entry.Character = p.GetIdent()[0];
+            p.Burn();
+            entry.Password = p.GetIdent();
 
-            return new PEntry() { LowRange = rangeStart, HighRange = rangeEnd, Character = c, Password = password };
+            return entry;
         }
 
         private class PEntry
         {
-            public int LowRange { get; set; }
-
-            public int HighRange { get; set; }
-
-            public char Character { get; set; }
-
-            public string Password { get; set; }
-
-            public override string ToString()
-            {
-                return $"{LowRange} to {HighRange} of {Character} in {Password}";
-            }
+            public int LowRange;
+            public int HighRange;
+            public char Character;
+            public string Password;
         }
     }
 }

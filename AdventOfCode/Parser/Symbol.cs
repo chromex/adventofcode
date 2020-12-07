@@ -11,6 +11,8 @@
         RParen,
         Colon,
         Period,
+        Plus,
+        Minus,
         EOF
     }
 }
