@@ -17,17 +17,17 @@ namespace AdventOfCode
 
         private Rule ParseRule(string line)
         {
-            string[] split = line.Split();
+            Parser p = new Parser(line);
             Rule rule = new Rule();
 
-            rule.bagColor = $"{split[0]} {split[1]}";
+            rule.bagColor = $"{p.GetIdent()} {p.GetIdent()}";
+            p.Burn(2);
 
-            int otherIndex = 4;
-            while (otherIndex < split.Length && split[otherIndex] != "no" && split[otherIndex] != ".")
+            while (!p.Done() && p.PeekIdent() != "no")
             {
-                rule.contentColors.Add($"{split[otherIndex +1]} {split[otherIndex +2]}");
-                rule.countColors.Add(int.Parse(split[otherIndex]));
-                otherIndex += 4;
+                rule.countColors.Add(p.GetNumber());
+                rule.contentColors.Add($"{p.GetIdent()} {p.GetIdent()}");
+                p.Burn(2);
             }
 
             return rule;
@@ -44,7 +44,6 @@ namespace AdventOfCode
 
                 if (RuleContainsBag(rules[key], "shiny gold"))
                     ++sum;
-
             }
 
             return $"{sum}";

@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Parser
+﻿namespace AdventOfCode
 {
     class Token
     {
@@ -15,6 +15,11 @@
         public override string ToString()
         {
             return $"{Symbol} \"{Raw}\"";
+        }
+        
+        public int AsNumber
+        {
+            get { return int.Parse(Raw); }
         }
     }
 }

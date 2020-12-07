@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Parser
+﻿namespace AdventOfCode
 {
     enum Symbol
     {
@@ -10,6 +10,7 @@
         LParen,
         RParen,
         Colon,
+        Period,
         EOF
     }
 }

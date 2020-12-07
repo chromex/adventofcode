@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AdventOfCode.Parser
+namespace AdventOfCode
 {
     class Lexer
     {
@@ -15,7 +15,8 @@ namespace AdventOfCode.Parser
             { ',', Symbol.Comma },
             { '(', Symbol.LParen },
             { ')', Symbol.RParen },
-            { ':', Symbol.Colon }
+            { ':', Symbol.Colon },
+            { '.', Symbol.Period }
         };
 
         public Lexer(string line)
