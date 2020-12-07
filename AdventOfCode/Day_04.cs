@@ -1,18 +1,16 @@
-﻿using AoCHelper;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode
 {
-    public class Day_04 : BaseDay
+    public class Day_04 : BetterBaseDay
     {
         private List<Passport> passports = new List<Passport>();
 
         public Day_04()
         {
-            LoadPassports();
+            passports = Util.ParseRecords<Passport>(Input, ":");
         }
 
         public override string Solve_1()
@@ -23,30 +21,6 @@ namespace AdventOfCode
         public override string Solve_2()
         {
             return $"{passports.Count(passport => passport.IsValid2())}";
-        }
-
-        private void LoadPassports()
-        {
-            List<string> records = Util.ParseRecords(File.ReadAllLines(InputFilePath), " ");
-
-            foreach (string record in records)
-            {
-                Passport current = new Passport();
-
-                string[] split = record.Split(" ");
-                foreach (string s in split)
-                {
-                    RegisterValue(s, current);
-                }
-
-                passports.Add(current);
-            }
-        }
-
-        private void RegisterValue(string entry, Passport p)
-        {
-            string[] split = entry.Split(":");
-            Util.SetProperty(p, split[0], split[1]);
         }
 
         private class Passport

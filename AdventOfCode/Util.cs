@@ -97,5 +97,31 @@ namespace AdventOfCode
 
             return results;
         }
+
+        public static List<T> ParseRecords<T>(string[] lines, string kvpSplit) where T : new()
+        {
+            List<T> results = new List<T>();
+
+            List<string> textRecords = Util.ParseRecords(lines, " ");
+            foreach (string s in textRecords)
+            {
+                T record = new T();
+
+                string[] properties = s.Split(" ");
+
+                foreach (string property in properties)
+                {
+                    if (!string.IsNullOrEmpty(property))
+                    {
+                        string[] kvp = property.Split(kvpSplit);
+                        Util.SetProperty(record, kvp[0], kvp[1]);
+                    }
+                }
+
+                results.Add(record);
+            }
+
+            return results;
+        }
     }
 }

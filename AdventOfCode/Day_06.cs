@@ -1,29 +1,23 @@
-﻿using AoCHelper;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace AdventOfCode
 {
-    public class Day_06 : BaseDay
+    public class Day_06 : BetterBaseDay
     {
-        private string[] lines;
-
         public Day_06()
-        {
-            lines = File.ReadAllLines(InputFilePath);
-        }
+        {}
 
         public override string Solve_1()
         {
-            List<string> records = Util.ParseRecords(lines, string.Empty);
+            List<string> records = Util.ParseRecords(Input, string.Empty);
 
             return $"{records.Select(str => str.Distinct().Count()).Sum()}";
         }
 
         public override string Solve_2()
         {
-            var sets = Util.ParseSets(lines);
+            var sets = Util.ParseSets(Input);
 
             int sum = 0;
             foreach (List<string> set in sets)
