@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace AdventOfCode
 {
@@ -36,8 +34,6 @@ namespace AdventOfCode
                     if (Input[y][x] == '#')
                         Set(space, 6 + x, 6 + y, 10, 10, true);
 
-            IEnumerable<int> deltaRange = Enumerable.Range(-1, 3);
-
             for (int count = 0; count < 6; ++count)
             {
                 BitArray copy = new BitArray(space);
@@ -51,15 +47,13 @@ namespace AdventOfCode
                 wDim.Expand(wDim.Start - 1);
                 wDim.Expand(wDim.End + 1);
 
-                foreach (int w in wDim.Range()) foreach (int z in zDim.Range()) foreach (int y in yDim.Range()) foreach (int x in xDim.Range())
+                for (int w = wDim.Start; w <= wDim.End; ++w) for (int z = zDim.Start; z <= zDim.End; ++z) for (int y = yDim.Start; y <= yDim.End; ++y) for (int x = xDim.Start; x <= xDim.End; ++x)
                 {
                     int sum = 0;
 
-                    foreach (int dw in deltaRange) foreach (int dz in deltaRange) foreach (int dy in deltaRange) foreach (int dx in deltaRange) 
+                    for (int dw = w - 1; dw < w + 2; ++dw) for (int dz = z - 1; dz < z + 2; ++dz) for (int dy = y - 1; dy < y + 2; ++dy) for (int dx = x - 1; dx < x + 2; ++dx)
                     {
-                        if (dx == 0 && dy == 0 && dz == 0 && dw == 0) continue;
-
-                        if (Test(x + dx, y + dy, z + dz, w + dw))
+                        if (!(dx == x && dy == y && dz == z && dw == w) && Test(dx, dy, dz, dw))
                         {
                             ++sum;
                         }
