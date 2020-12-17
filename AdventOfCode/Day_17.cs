@@ -69,9 +69,9 @@ namespace AdventOfCode
             }
 
             int total = 0;
-            foreach (var bit in space)
+            for (int idx = 0; idx < space.Length; ++idx)
             {
-                if ((bool)bit) ++total;
+                if (space[idx]) ++total;
             }
             return total.ToString();
         }
