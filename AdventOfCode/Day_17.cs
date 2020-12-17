@@ -53,7 +53,7 @@ namespace AdventOfCode
 
                     for (int dw = w - 1; dw < w + 2; ++dw) for (int dz = z - 1; dz < z + 2; ++dz) for (int dy = y - 1; dy < y + 2; ++dy) for (int dx = x - 1; dx < x + 2; ++dx)
                     {
-                        if (!(dx == x && dy == y && dz == z && dw == w) && Test(dx, dy, dz, dw))
+                        if (Test(dx, dy, dz, dw) && !(dx == x && dy == y && dz == z && dw == w))
                         {
                             ++sum;
                         }
