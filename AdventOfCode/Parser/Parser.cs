@@ -16,6 +16,11 @@ namespace AdventOfCode
             return _lexer.Current.Symbol == Symbol.EOF;
         }
 
+        public Symbol PeekSymbol()
+        {
+            return _lexer.Current.Symbol;
+        }
+
         public string PeekIdent()
         {
             if (_lexer.Current.Symbol == Symbol.Ident)
