@@ -1,27 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AdventOfCode
 {
     public class Day_17 : BetterBaseDay
     {
-        const long size = 20;
-        Dictionary<long, bool> space = new Dictionary<long, bool>();
+        const int size = 20;
+        BitArray space = new BitArray(size * size * size * size);
+        IntRange xDim = new IntRange(size / 2, size / 2), yDim = new IntRange(size / 2, size / 2), zDim = new IntRange(size / 2, size / 2), wDim = new IntRange(size / 2, size / 2);
 
-        private long GetIndex(int x, int y, int z, int w)
+        private int GetIndex(int x, int y, int z, int w)
         {
             return (w * size * size * size) + (z * size * size) + (y * size) + x;
         }
 
-        private void Set(Dictionary<long, bool> sp, int x, int y, int z, int w, bool val)
+        private void Set(BitArray sp, int x, int y, int z, int w, bool val)
         {
             sp[GetIndex(x, y, z, w)] = val;
+            xDim.Expand(x);
+            yDim.Expand(y);
+            zDim.Expand(z);
+            wDim.Expand(w);
         }
 
         private bool Test(int x, int y, int z, int w)
         {
-            long index = GetIndex(x, y, z, w);
-            return space.ContainsKey(index) ? space[index] : false;
+            return space[GetIndex(x, y, z, w)];
         }
 
         public override string Solve_1()
@@ -29,16 +34,24 @@ namespace AdventOfCode
             for (int y = 0; y < Input.Length; ++y)
                 for (int x = 0; x < Input[y].Length; ++x)
                     if (Input[y][x] == '#')
-                        Set(space, 10 + x, 10 + y, 10, 10, true);
+                        Set(space, 6 + x, 6 + y, 10, 10, true);
 
-            IEnumerable<int> mapRange = Enumerable.Range(0, (int)size);
             IEnumerable<int> deltaRange = Enumerable.Range(-1, 3);
 
             for (int count = 0; count < 6; ++count)
             {
-                Dictionary<long, bool> copy = space.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                BitArray copy = new BitArray(space);
 
-                foreach (int w in mapRange) foreach (int z in mapRange) foreach (int y in mapRange) foreach (int x in mapRange)
+                xDim.Expand(xDim.Start - 1);
+                xDim.Expand(xDim.End + 1);
+                yDim.Expand(yDim.Start - 1);
+                yDim.Expand(yDim.End + 1);
+                zDim.Expand(zDim.Start - 1);
+                zDim.Expand(zDim.End + 1);
+                wDim.Expand(wDim.Start - 1);
+                wDim.Expand(wDim.End + 1);
+
+                foreach (int w in wDim.Range()) foreach (int z in zDim.Range()) foreach (int y in yDim.Range()) foreach (int x in xDim.Range())
                 {
                     int sum = 0;
 
@@ -61,7 +74,12 @@ namespace AdventOfCode
                 space = copy;
             }
 
-            return space.Where(kvp => kvp.Value).Count().ToString();
+            int total = 0;
+            foreach (var bit in space)
+            {
+                if ((bool)bit) ++total;
+            }
+            return total.ToString();
         }
 
         public override string Solve_2()
