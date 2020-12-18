@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode
 {
-    enum Symbol
+    public enum Symbol
     {
         Error,
         Ident,
@@ -13,6 +13,8 @@
         Period,
         Plus,
         Minus,
+        Mult,
+        Div,
         EOF
     }
 }

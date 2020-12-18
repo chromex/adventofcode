@@ -59,10 +59,10 @@ namespace AdventOfCode
                         }
                     }
 
-                    if (Test(x, y, z, w))
-                        Set(copy, x, y, z, w, sum == 2 || sum == 3);
-                    else if (sum == 3)
+                    if (sum == 3)
                         Set(copy, x, y, z, w, true);
+                    else if (Test(x, y, z, w))
+                        Set(copy, x, y, z, w, sum == 2 || sum == 3);
                 }
 
                 space = copy;
