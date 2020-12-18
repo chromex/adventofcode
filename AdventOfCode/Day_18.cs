@@ -1,39 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 namespace AdventOfCode
 {
     public class Day_18 : BetterBaseDay
     {
-        private long ComputeRPN(List<Tuple<Symbol, long>> commands)
+        private long Comp(Parser p, bool bestPlus)
         {
-            Stack<long> stack = new Stack<long>();
-
-            foreach (var tup in commands)
-            {
-                switch (tup.Item1)
-                {
-                    case Symbol.Ident: stack.Push(tup.Item2); break;
-                    case Symbol.Plus: stack.Push(stack.Pop() + stack.Pop()); break;
-                    case Symbol.Mult: stack.Push(stack.Pop() * stack.Pop()); break;
-                }
-            }
-
-            return stack.Pop();
-        }
-
-        private List<Tuple<Symbol, long>> GetRPN(Parser p, bool bestPlus)
-        {
-            List<Tuple<Symbol, long>> commands = new List<Tuple<Symbol, long>>();
+            long result = 0;
 
             if (p.PeekSymbol() == Symbol.Ident)
             {
-                commands.Add(Tuple.Create(Symbol.Ident, (long)p.GetNumber()));
+                result = p.GetNumber();
             }
             else if (p.Accept(Symbol.LParen))
             {
-                commands.AddRange(GetRPN(p, bestPlus));
+                result = Comp(p, bestPlus);
                 p.Accept(Symbol.RParen);
             }
 
@@ -42,37 +23,42 @@ namespace AdventOfCode
                 Symbol sym = p.PeekSymbol();
                 p.Burn();
 
+                long rVal = 0;
+
                 if (!bestPlus || sym == Symbol.Plus)
                 {
                     if (p.PeekSymbol() == Symbol.Ident)
                     {
-                        commands.Add(Tuple.Create(Symbol.Ident, (long)p.GetNumber()));
+                        rVal = p.GetNumber();
                     }
                     else if (p.Accept(Symbol.LParen))
                     {
-                        commands.AddRange(GetRPN(p, bestPlus));
+                        rVal = Comp(p, bestPlus);
                         p.Accept(Symbol.RParen);
                     }
                 }
                 else
                 {
-                    commands.AddRange(GetRPN(p, bestPlus));
+                    rVal = Comp(p, bestPlus);
                 }
 
-                commands.Add(Tuple.Create(sym, 0L));
+                if (sym == Symbol.Plus)
+                    result += rVal;
+                else
+                    result *= rVal;
             }
 
-            return commands;
+            return result;
         }
 
         public override string Solve_1()
         {
-            return Input.Select(line => ComputeRPN(GetRPN(new Parser(line), false))).Sum().ToString();
+            return Input.Select(line => Comp(new Parser(line), false)).Sum().ToString();
         }
 
         public override string Solve_2()
         {
-            return Input.Select(line => ComputeRPN(GetRPN(new Parser(line), true))).Sum().ToString();
+            return Input.Select(line => Comp(new Parser(line), true)).Sum().ToString();
         }
     }
 }
