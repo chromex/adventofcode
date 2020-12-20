@@ -123,5 +123,28 @@ namespace AdventOfCode
 
             return results;
         }
+
+        public static string RevStr(string s)
+        {
+            var arr = s.ToCharArray();
+            Array.Reverse(arr);
+            return new string(arr);
+        }
+
+        public static void ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
+        {
+            foreach (T item in enumeration)
+            {
+                action(item);
+            }
+        }
+
+        public static void Swap<T>(ref T x, ref T y)
+        {
+
+            T tempswap = x;
+            x = y;
+            y = tempswap;
+        }
     }
 }
