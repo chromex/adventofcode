@@ -141,7 +141,6 @@ namespace AdventOfCode
 
         public static void Swap<T>(ref T x, ref T y)
         {
-
             T tempswap = x;
             x = y;
             y = tempswap;

@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AdventOfCode
 {
-    class Parser
+    public class Parser
     {
         private Lexer _lexer;
 
@@ -63,6 +64,40 @@ namespace AdventOfCode
             }
 
             return false;
+        }
+
+        public List<string> AcceptIdents(Symbol seperator = Symbol.Error)
+        {
+            List<string> result = new List<string>();
+
+            while (PeekSymbol() == Symbol.Ident)
+            {
+                result.Add(GetIdent());
+
+                if (seperator != Symbol.Error)
+                {
+                    Accept(seperator);
+                }
+            }
+
+            return result;
+        }
+
+        public List<int> AcceptNumbers(Symbol seperator = Symbol.Error)
+        {
+            List<int> result = new List<int>();
+
+            while (PeekSymbol() == Symbol.Ident)
+            {
+                result.Add(GetNumber());
+
+                if (seperator != Symbol.Error)
+                {
+                    Accept(seperator);
+                }
+            }
+
+            return result;
         }
 
         public void Burn(int num = 1)

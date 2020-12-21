@@ -1,5 +1,6 @@
 ﻿using AoCHelper;
 using System.IO;
+using System.Linq;
 
 namespace AdventOfCode
 {
@@ -19,5 +20,7 @@ namespace AdventOfCode
                 return _lines;
             }
         }
+
+        public Parser[] InputParsers => Input.Select(line => new Parser(line)).ToArray();
     }
 }
