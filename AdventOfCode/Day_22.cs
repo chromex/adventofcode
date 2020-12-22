@@ -31,47 +31,33 @@ namespace AdventOfCode
 
             while (deck1.Count > 0 && deck2.Count > 0)
             {
-                string roundId = string.Join(",", deck1.ToArray()) + "=" + string.Join(",", deck2.ToArray());
-
-                if (previousDecks.Contains(roundId))
+                if (!previousDecks.Add(string.Join(",", deck1.ToArray()) + "=" + string.Join(",", deck2.ToArray())))
                 {
                     return Tuple.Create(1L, 0L);
                 }
 
-                previousDecks.Add(roundId);
-
-                int c1 = deck1.First(); deck1.Remove(c1);
-                int c2 = deck2.First(); deck2.Remove(c2);
+                int c1 = deck1.Dequeue(), c2 = deck2.Dequeue(); 
 
                 if (recurse && c1 <= deck1.Count && c2 <= deck2.Count)
                 {
-                    var result = Combat(deck1.GetRange(0, c1).ToList(), deck2.GetRange(0, c2).ToList(), recurse);
+                    var result = Combat(deck1.GetRange(0, c1), deck2.GetRange(0, c2), recurse);
 
                     if (result.Item1 > result.Item2)
-                    {
-                        deck1.Add(c1);
-                        deck1.Add(c2);
-                    }
+                        deck1.Add(c1, c2);
                     else
-                    {
-                        deck2.Add(c2);
-                        deck2.Add(c1);
-                    }
+                        deck2.Add(c2, c1);
                 }
                 else if (c1 > c2)
                 {
-                    deck1.Add(c1);
-                    deck1.Add(c2);
+                    deck1.Add(c1, c2);
                 }
                 else
                 {
-                    deck2.Add(c2);
-                    deck2.Add(c1);
+                    deck2.Add(c2, c1);
                 }
             }
 
-            long mult1 = deck1.Count;
-            long mult2 = deck2.Count;
+            long mult1 = deck1.Count, mult2 = deck2.Count;
             return Tuple.Create(deck1.Select(val => val * mult1--).Sum(), deck2.Select(val => val * mult2--).Sum());
         }
     }

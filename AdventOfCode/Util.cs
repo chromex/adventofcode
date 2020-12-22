@@ -131,14 +131,6 @@ namespace AdventOfCode
             return new string(arr);
         }
 
-        public static void ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
-        {
-            foreach (T item in enumeration)
-            {
-                action(item);
-            }
-        }
-
         public static void Swap<T>(ref T x, ref T y)
         {
             T tempswap = x;
