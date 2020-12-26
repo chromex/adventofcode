@@ -16,6 +16,18 @@ namespace AdventOfCode
             Y = y;
         }
 
+        public Vec2(string str)
+        {
+            string[] split = str.Split(",");
+            X = int.Parse(split[0]);
+            Y = int.Parse(split[1]);
+        }
+
+        public override string ToString()
+        {
+            return $"{X},{Y}";
+        }
+
         public int Manhattan
         {
             get { return Math.Abs(X) + Math.Abs(Y); }
