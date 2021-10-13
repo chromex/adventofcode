@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using AoCUtil;
+using System.Linq;
 
 namespace AdventOfCode
 {

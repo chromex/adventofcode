@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using AoCUtil;
+using System.Collections.Generic;
 
 namespace AdventOfCode
 {

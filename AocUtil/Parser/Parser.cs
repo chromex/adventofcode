@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AdventOfCode
+namespace AoCUtil
 {
     public class Parser
     {

@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using AoCUtil;
+using System;
 using System.Linq;
 using System.Text;
 

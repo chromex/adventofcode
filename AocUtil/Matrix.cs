@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AoCUtil;
 
-namespace AdventOfCode
+namespace AoCUtil
 {
     public class Matrix<T>
     {

@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode
+﻿namespace AoCUtil
 {
     public enum Symbol
     {

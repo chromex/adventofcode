@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AdventOfCode
+namespace AoCUtil
 {
     public class Vec2
     {
