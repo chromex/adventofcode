@@ -66,6 +66,17 @@ namespace AoCUtil
             return false;
         }
 
+        public bool Accept(string str)
+        {
+            if (PeekSymbol() == Symbol.Ident && _lexer.Current.Raw.Equals(str))
+            {
+                _lexer.Advance();
+                return true;
+            }
+
+            return false;
+        }
+
         public List<string> AcceptIdents(Symbol seperator = Symbol.Error)
         {
             List<string> result = new List<string>();
