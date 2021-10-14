@@ -77,6 +77,17 @@ namespace AoCUtil
             return false;
         }
 
+        public void Expect(Symbol sym)
+        {
+            if (_lexer.Current.Symbol == sym)
+            {
+                _lexer.Advance();
+                return;
+            }
+
+            throw new Exception($"Wrong Symbol, expected {sym}");
+        }
+
         public List<string> AcceptIdents(Symbol seperator = Symbol.Error)
         {
             List<string> result = new List<string>();
@@ -92,6 +103,19 @@ namespace AoCUtil
             }
 
             return result;
+        }
+
+        public bool AcceptNumber(out int val)
+        {
+            val = 0;
+
+            if (PeekSymbol() == Symbol.Ident && int.TryParse(_lexer.Current.Raw, out val))
+            {
+                _lexer.Advance();
+                return true;
+            }
+
+            return false;
         }
 
         public List<int> AcceptNumbers(Symbol seperator = Symbol.Error)

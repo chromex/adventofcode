@@ -10,15 +10,17 @@ namespace AoCUtil
         private int _endIndex;
         private Dictionary<char, Symbol> _simpleSymbols = new Dictionary<char, Symbol>()
         {
-            { '[', Symbol.LBracket },
-            { ']', Symbol.RBracket },
+            { '{', Symbol.LBracket },
+            { '}', Symbol.RBracket },
+            { '[', Symbol.LSqBracket },
+            { ']', Symbol.RSqBracket },
+            { '"', Symbol.Quote },
             { ',', Symbol.Comma },
             { '(', Symbol.LParen },
             { ')', Symbol.RParen },
             { ':', Symbol.Colon },
             { '.', Symbol.Period },
             { '+', Symbol.Plus },
-            { '-', Symbol.Minus },
             { '*', Symbol.Mult },
             { '/', Symbol.Div }
         };
