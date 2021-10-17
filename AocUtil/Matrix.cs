@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AoCUtil;
+using System.Text;
 
 namespace AoCUtil
 {
@@ -29,6 +29,21 @@ namespace AoCUtil
         public int Height { get; private set; }
         public T[,] Data { get; private set; }
 
+        public override string ToString()
+        {
+            StringBuilder sb = new();
+            for (int x = 0; x < Width; ++x)
+            {
+                for (int y = 0; y < Height; ++y)
+                {
+                    sb.Append(Data[x, y]);
+                }
+
+                sb.AppendLine();
+            }
+            return sb.ToString();
+        }
+
         public IEnumerable<T[]> Rows()
         {
             for (int row = 0; row < Height; ++row)
@@ -55,6 +70,16 @@ namespace AoCUtil
             for (int idx = 0; idx < Height; ++idx)
                 ret[idx] = Data[idx, col];
             return ret;
+        }
+
+        public T LoseGet(int x, int y)
+        {
+            if (x >= 0 && x < Width && y >= 0 && y < Height)
+            {
+                return Data[x, y];
+            }
+
+            return default(T);
         }
 
         public void FlipV()
