@@ -1,36 +1,74 @@
 ﻿using AoCUtil;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace aoc2015
 {
     class Day_06 : BetterBaseDay
     {
-        private Dictionary<string, bool> map = new();
-        private Dictionary<string, int> map2 = new();
+        private static readonly int Size = 1000;
+        private bool[] fastMap = new bool[Size * Size];
+        private int[] fastMap2 = new int[Size * Size];
 
-        private void Apply(Action<Vec2> f, Vec2 min, Vec2 max)
+        private void Inc(Vec2 min, Vec2 max)
         {
-            Vec2 v = new();
-
             for (int x = min.X; x <= max.X; ++x)
             {
                 for (int y = min.Y; y <= max.Y; ++y)
                 {
-                    v.X = x;
-                    v.Y = y;
-                    f(v);
+                    int i = y * Size + x;
+                    fastMap2[i] = fastMap2[i] + 1;
                 }
             }
         }
 
-        private void Inc(Vec2 min, Vec2 max) => Apply(v => map2[v.ToString()] = map2.GetValueOrDefault(v.ToString()) + 1, min, max);
-        private void Dec(Vec2 min, Vec2 max) => Apply(v => map2[v.ToString()] = Math.Max(map2.GetValueOrDefault(v.ToString()) - 1, 0), min, max);
+        private void Dec(Vec2 min, Vec2 max)
+        {
+            for (int x = min.X; x <= max.X; ++x)
+            {
+                for (int y = min.Y; y <= max.Y; ++y)
+                {
+                    int i = y * Size + x;
+                    fastMap2[i] = Math.Max(fastMap2[i] - 1, 0);
+                }
+            }
+        }
 
-        private void TurnOn(Vec2 min, Vec2 max) => Apply(v => map[v.ToString()] = true, min, max);
-        private void TurnOff(Vec2 min, Vec2 max) => Apply(v => map[v.ToString()] = false, min, max);
-        private void Toggle(Vec2 min, Vec2 max) => Apply(v => map[v.ToString()] = !map.GetValueOrDefault(v.ToString()), min, max);
+        private void FastTurnOn(Vec2 min, Vec2 max)
+        {
+            for (int x = min.X; x <= max.X; ++x)
+            {
+                for (int y = min.Y; y <= max.Y; ++y)
+                {
+                    int i = y * Size + x;
+                    fastMap[i] = true;
+                }
+            }
+        }
+
+        private void FastTurnOff(Vec2 min, Vec2 max)
+        {
+            for (int x = min.X; x <= max.X; ++x)
+            {
+                for (int y = min.Y; y <= max.Y; ++y)
+                {
+                    int i = y * Size + x;
+                    fastMap[i] = false;
+                }
+            }
+        }
+
+        private void FastToggle(Vec2 min, Vec2 max)
+        {
+            for (int x = min.X; x <= max.X; ++x)
+            {
+                for (int y = min.Y; y <= max.Y; ++y)
+                {
+                    int i = y * Size + x;
+                    fastMap[i] = !fastMap[i];
+                }
+            }
+        }
 
         private void Do(string str)
         {
@@ -41,12 +79,12 @@ namespace aoc2015
 
             if (spl.Length == 5)
             {
-                if (spl[1] == "on") TurnOn(min, max);
-                else TurnOff(min, max);
+                if (spl[1] == "on") FastTurnOn(min, max);
+                else FastTurnOff(min, max);
             }
             else
             {
-                Toggle(min, max);
+                FastToggle(min, max);
             }
         }
 
@@ -54,7 +92,7 @@ namespace aoc2015
         {
             Input.ForEach(line => Do(line));
 
-            return map.Values.Count(b => b).ToString();
+            return fastMap.Count(b => b).ToString();
         }
 
         private void Do2(string str)
@@ -80,7 +118,7 @@ namespace aoc2015
         {
             Input.ForEach(line => Do2(line));
 
-            return map2.Values.Sum().ToString();
+            return fastMap2.Sum().ToString();
         }
     }
 }
