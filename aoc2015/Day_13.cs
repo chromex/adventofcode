@@ -7,23 +7,31 @@ namespace aoc2015
 {
     class Day_13 : BetterBaseDay
     {
-        private Dictionary<string, int> netHappy = new();
+        private int[] fastHappy = new int[100];
         private List<string> people;
         private int maxd = int.MinValue;
 
-        private static string GetKey(string i, string j)
+        private int GetHappiness(int i, int j) => fastHappy[i * 10 + j];
+
+        private static int GetIndex(string name)
         {
-            if (i.CompareTo(j) < 0)
+            switch (name)
             {
-                return $"{i}{j}";
+                case "Alice": return 0;
+                case "Bob": return 1;
+                case "Carol": return 2;
+                case "David": return 3;
+                case "Eric": return 4;
+                case "Frank": return 5;
+                case "George": return 6;
+                case "Mallory": return 7;
+                case "Me": return 8;
             }
-            else
-            {
-                return $"{j}{i}";
-            }
+
+            return -99;
         }
 
-        private int GetHappiness(string i, string j) => netHappy[GetKey(i, j)];
+        private static int GetKey(string p1, string p2) => GetIndex(p1) * 10 + GetIndex(p2);
 
         private void Load()
         {
@@ -38,7 +46,9 @@ namespace aoc2015
                     val *= -1;
                 p.Add(p1);
                 p.Add(p2);
-                netHappy[GetKey(p1, p2)] = netHappy.GetValueOrDefault(GetKey(p1, p2)) + val;
+
+                fastHappy[GetKey(p1, p2)] = fastHappy[GetKey(p1, p2)] + val;
+                fastHappy[GetKey(p2, p1)] = fastHappy[GetKey(p2, p1)] + val;
             });
             people = p.ToList();
         }
@@ -49,10 +59,10 @@ namespace aoc2015
 
             for (int i = 0; i < s.Length - 1; ++i)
             {
-                dist += GetHappiness(people[s[i] - '0'], people[s[i + 1] - '0']);
+                dist += GetHappiness(s[i] - '0', s[i + 1] - '0');
             }
 
-            dist += GetHappiness(people[s[0] - '0'], people[s[s.Length - 1] - '0']);
+            dist += GetHappiness(s[0] - '0', s[s.Length - 1] - '0');
 
             return dist;
         }
@@ -88,8 +98,11 @@ namespace aoc2015
         {
             maxd = int.MinValue;
 
-            people.ForEach(p => netHappy[GetKey(p, "me")] = 0);
-            people.Add("me");
+            people.ForEach((p) =>
+            {
+                fastHappy[GetKey(p, "Me")] = 0;
+                fastHappy[GetKey("Me", p)] = 0;
+            });
 
             Permute(9, "", '8');
 

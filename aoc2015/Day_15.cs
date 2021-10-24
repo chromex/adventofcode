@@ -47,18 +47,22 @@ namespace aoc2015
             Ingredient[] ingredients = GetIngredients();
             int highest = int.MinValue;
 
-            for (int a = 1; a < 100; ++a)
+            for (int a = 1; a <= 97; ++a)
             {
-                for (int b = 1; b < 100; ++b)
+                int maxB = 97 - a + 1;
+
+                for (int b = 1; b <= maxB; ++b)
                 {
-                    for (int c = 1; c < 100; ++c)
+                    int maxC = maxB - b + 1;
+
+                    for (int c = 1; c <= maxC; ++c)
                     {
-                        for (int d = 1; d < 100; ++d)
+                        int minD = 100 - (a + b + c);
+                        int maxD = maxC - c + 1;
+
+                        for (int d = minD; d <= maxD; ++d)
                         {
-                            if ((a + b + c + d) == 100)
-                            {
-                                highest = Math.Max(Score(ingredients, new[] { a, b, c, d }), highest);
-                            }
+                            highest = Math.Max(Score(ingredients, new[] { a, b, c, d }), highest);
                         }
                     }
                 }
@@ -72,16 +76,23 @@ namespace aoc2015
             Ingredient[] ingredients = GetIngredients();
             int highest = int.MinValue;
 
-            for (int a = 1; a < 100; ++a)
+            for (int a = 1; a <= 97; ++a)
             {
-                for (int b = 1; b < 100; ++b)
+                int maxB = 97 - a + 1;
+
+                for (int b = 1; b <= maxB; ++b)
                 {
-                    for (int c = 1; c < 100; ++c)
+                    int maxC = maxB - b + 1;
+
+                    for (int c = 1; c <= maxC; ++c)
                     {
-                        for (int d = 1; d < 100; ++d)
+                        int minD = 100 - (a + b + c);
+                        int maxD = maxC - c + 1;
+
+                        for (int d = minD; d <= maxD; ++d)
                         {
                             int[] weights = new[] { a, b, c, d };
-                            if ((a + b + c + d) == 100 && Calories(ingredients, weights) == 500)
+                            if (Calories(ingredients, weights) == 500)
                             {
                                 highest = Math.Max(Score(ingredients, weights), highest);
                             }
