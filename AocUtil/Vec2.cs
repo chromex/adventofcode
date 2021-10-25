@@ -57,5 +57,40 @@ namespace AoCUtil
         {
             return new Vec2(lhs.X * rhs, lhs.Y * rhs);
         }
+
+        public static bool operator==(Vec2 lhs, Vec2 rhs)
+        {
+            return lhs.X == rhs.X && lhs.Y == rhs.Y;
+        }
+
+        public static bool operator !=(Vec2 lhs, Vec2 rhs)
+        {
+            return lhs.X != rhs.X || lhs.Y != rhs.Y;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(obj, null))
+            {
+                return false;
+            }
+
+            if (obj is Vec2)
+            {
+                return this == (obj as Vec2);
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
