@@ -4,18 +4,21 @@ using System.Collections.Generic;
 
 namespace AoCUtil
 {
-    public class FastSet<T> : IEnumerable<T>, IEnumerable
+    // Generic, readonly array type container. Supports creating a "subset" version 
+    // to create and use views that exclude some of the items. Useful for scenarios
+    // that occur when dealing with finding various combinations. 
+    public class FastList<T> : IEnumerable<T>, IEnumerable
     {
         private readonly T[] _data;
         private readonly int[] _indecies;
 
-        private FastSet(T[] data, int[] subsetIndecies)
+        private FastList(T[] data, int[] subsetIndecies)
         {
             _data = data;
             _indecies = subsetIndecies;
         }
 
-        public FastSet(T[] data)
+        public FastList(T[] data)
         {
             _data = data;
             _indecies = new int[data.Length];
@@ -25,13 +28,13 @@ namespace AoCUtil
             }
         }
 
-        public FastSet(FastSet<T> other)
+        public FastList(FastList<T> other)
         {
             _data = other._data;
             _indecies = other._indecies;
         }
 
-        public FastSet(List<T> data) : this(data.ToArray())
+        public FastList(List<T> data) : this(data.ToArray())
         { }
 
         public int Length => _indecies.Length;
@@ -65,7 +68,7 @@ namespace AoCUtil
             }
         }
 
-        public FastSet<T> Without(T val)
+        public FastList<T> Without(T val)
         {
             List<int> newIndecies = new();
 
@@ -82,7 +85,7 @@ namespace AoCUtil
             return new(_data, newIndecies.ToArray());
         }
 
-        public FastSet<T> Without(Func<T, bool> predicate)
+        public FastList<T> Without(Func<T, bool> predicate)
         {
             List<int> newIndecies = new();
 

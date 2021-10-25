@@ -103,9 +103,9 @@ namespace aoc2015
             return _minQE.ToString();
         }
 
-        private static void CollectSets(FastSet<int> packages, int target, List<int> group, List<int[]> collection)
+        private static void CollectSets(FastList<int> packages, int target, List<int> group, List<int[]> collection)
         {
-            FastSet<int> workingSet = new(packages);
+            FastList<int> workingSet = new(packages);
 
             packages.ForEach(package =>
             {
@@ -153,13 +153,13 @@ namespace aoc2015
 
         public override string Solve_2()
         {
-            FastSet<int> packages = new(Input.Select(line => int.Parse(line)).OrderByDescending(i => i).ToArray());
+            FastList<int> packages = new(Input.Select(line => int.Parse(line)).OrderByDescending(i => i).ToArray());
 
             int target = packages.Sum() / 4;
 
             List<int[]> sets = new();
             CollectSets(packages, target, new(), sets);
-            FastSet<int[]> allSets = new(sets.OrderBy(s => s.Length).ToArray());
+            FastList<int[]> allSets = new(sets.OrderBy(s => s.Length).ToArray());
 
             int shortestFound = int.MaxValue;
             ulong minQE = int.MaxValue;
@@ -172,7 +172,7 @@ namespace aoc2015
                 }
 
                 // Remove all sets that overlap
-                FastSet<int[]> subset1 = allSets.Without(set => Overlap(group1, set));
+                FastList<int[]> subset1 = allSets.Without(set => Overlap(group1, set));
 
                 bool searching = true;
 
@@ -180,11 +180,11 @@ namespace aoc2015
                 subset1.ForEachBreakable(group2 =>
                 {
                     // Remove all sets that overlap
-                    FastSet<int[]> subset2 = subset1.Without(set => Overlap(group2, set));
+                    FastList<int[]> subset2 = subset1.Without(set => Overlap(group2, set));
 
                     subset2.ForEachBreakable(group3 =>
                     {
-                        FastSet<int[]> final = subset2.Without(set => Overlap(group3, set));
+                        FastList<int[]> final = subset2.Without(set => Overlap(group3, set));
 
                         if (final.Length > 0)
                         {
