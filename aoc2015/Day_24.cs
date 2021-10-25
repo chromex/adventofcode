@@ -98,7 +98,7 @@ namespace aoc2015
 
             int target = packages.Sum() / 3;
 
-            //Search(packages, target, new());
+            Search(packages, target, new());
 
             return _minQE.ToString();
         }
@@ -127,6 +127,30 @@ namespace aoc2015
             });
         }
 
+        private static ulong Product(int[] vals)
+        {
+            ulong sum = 1;
+            for (int i = 0; i < vals.Length; ++i)
+            {
+                sum *= (ulong)vals[i];
+            }
+            return sum;
+        }
+
+        private static bool Overlap(int[] p, int[] j)
+        {
+            for (int ip = 0; ip < p.Length; ++ip)
+            {
+                for (int ij = 0; ij < j.Length; ++ij)
+                {
+                    if (p[ip] == j[ij])
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
         public override string Solve_2()
         {
             FastSet<int> packages = new(Input.Select(line => int.Parse(line)).OrderByDescending(i => i).ToArray());
@@ -135,18 +159,51 @@ namespace aoc2015
 
             List<int[]> sets = new();
             CollectSets(packages, target, new(), sets);
+            FastSet<int[]> allSets = new(sets.OrderBy(s => s.Length).ToArray());
 
-            //sets.ForEach(s =>
-            //{
-            //    Console.WriteLine($"{string.Join(" ", s)} => {s.Sum()}");
-            //});
+            int shortestFound = int.MaxValue;
+            ulong minQE = int.MaxValue;
 
+            allSets.ForEachBreakable(group1 =>
+            {
+                if (group1.Length > shortestFound)
+                {
+                    return false;
+                }
 
-            // Find all sets of target size. All. Of. Them.
+                // Remove all sets that overlap
+                FastSet<int[]> subset1 = allSets.Without(set => Overlap(group1, set));
 
-            // For each of the shortest sets, check the remaining sets for 
+                bool searching = true;
 
-            return "no";
+                // For each sets in the non-overlapping group... (group2)
+                subset1.ForEachBreakable(group2 =>
+                {
+                    // Remove all sets that overlap
+                    FastSet<int[]> subset2 = subset1.Without(set => Overlap(group2, set));
+
+                    subset2.ForEachBreakable(group3 =>
+                    {
+                        FastSet<int[]> final = subset2.Without(set => Overlap(group3, set));
+
+                        if (final.Length > 0)
+                        {
+                            //Console.WriteLine($"{string.Join(" ", group1)} = {Product(group1)}");
+                            shortestFound = group1.Length;
+                            minQE = Math.Min(minQE, Product(group1));
+                            searching = false;
+                        }
+
+                        return searching;
+                    });
+
+                    return searching;
+                });
+
+                return true;
+            });
+
+            return minQE.ToString();
         }
     }
 }

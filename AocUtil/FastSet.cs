@@ -34,6 +34,13 @@ namespace AoCUtil
         public FastSet(List<T> data) : this(data.ToArray())
         { }
 
+        public int Length => _indecies.Length;
+        
+        public T this[int index]
+        {
+            get { return _data[_indecies[index]]; }
+        }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -47,6 +54,17 @@ namespace AoCUtil
             }
         }
 
+        public void ForEachBreakable(Func<T, bool> action)
+        {
+            for (int i = 0; i < _indecies.Length; ++i)
+            {
+                if (!action(_data[_indecies[i]]))
+                {
+                    break;
+                }
+            }
+        }
+
         public FastSet<T> Without(T val)
         {
             List<int> newIndecies = new();
@@ -56,6 +74,23 @@ namespace AoCUtil
                 int index = _indecies[i];
 
                 if (!_data[index].Equals(val))
+                {
+                    newIndecies.Add(index);
+                }
+            }
+
+            return new(_data, newIndecies.ToArray());
+        }
+
+        public FastSet<T> Without(Func<T, bool> predicate)
+        {
+            List<int> newIndecies = new();
+
+            for (int i = 0; i < _indecies.Length; ++i)
+            {
+                int index = _indecies[i];
+
+                if (!predicate(_data[index]))
                 {
                     newIndecies.Add(index);
                 }
