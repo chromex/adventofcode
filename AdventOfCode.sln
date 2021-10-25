@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aoc2015", "aoc2015\aoc2015.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AocUtil", "AocUtil\AocUtil.csproj", "{1DFDB7D6-770C-476D-A99A-EE17F7134FB0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aoc2016", "aoc2016\aoc2016.csproj", "{5070D254-7F46-4A9E-B6F4-DA61B4B44509}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,18 @@ Global
 		{1DFDB7D6-770C-476D-A99A-EE17F7134FB0}.Release|x64.Build.0 = Release|Any CPU
 		{1DFDB7D6-770C-476D-A99A-EE17F7134FB0}.Release|x86.ActiveCfg = Release|Any CPU
 		{1DFDB7D6-770C-476D-A99A-EE17F7134FB0}.Release|x86.Build.0 = Release|Any CPU
+		{5070D254-7F46-4A9E-B6F4-DA61B4B44509}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5070D254-7F46-4A9E-B6F4-DA61B4B44509}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5070D254-7F46-4A9E-B6F4-DA61B4B44509}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5070D254-7F46-4A9E-B6F4-DA61B4B44509}.Debug|x64.Build.0 = Debug|Any CPU
+		{5070D254-7F46-4A9E-B6F4-DA61B4B44509}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5070D254-7F46-4A9E-B6F4-DA61B4B44509}.Debug|x86.Build.0 = Debug|Any CPU
+		{5070D254-7F46-4A9E-B6F4-DA61B4B44509}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5070D254-7F46-4A9E-B6F4-DA61B4B44509}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5070D254-7F46-4A9E-B6F4-DA61B4B44509}.Release|x64.ActiveCfg = Release|Any CPU
+		{5070D254-7F46-4A9E-B6F4-DA61B4B44509}.Release|x64.Build.0 = Release|Any CPU
+		{5070D254-7F46-4A9E-B6F4-DA61B4B44509}.Release|x86.ActiveCfg = Release|Any CPU
+		{5070D254-7F46-4A9E-B6F4-DA61B4B44509}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
