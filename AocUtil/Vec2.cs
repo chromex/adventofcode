@@ -38,7 +38,7 @@ namespace AoCUtil
             get { return Math.Sqrt(X * X + Y * Y); }
         }
 
-        public static Vec2 operator+(Vec2 lhs, Vec2 rhs)
+        public static Vec2 operator +(Vec2 lhs, Vec2 rhs)
         {
             return new Vec2(lhs.X + rhs.X, lhs.Y + rhs.Y);
         }
@@ -66,6 +66,20 @@ namespace AoCUtil
         public static bool operator !=(Vec2 lhs, Vec2 rhs)
         {
             return lhs.X != rhs.X || lhs.Y != rhs.Y;
+        }
+
+        public void RotateLeft90()
+        {
+            int t = X;
+            X = -Y;
+            Y = t;
+        }
+
+        public void RotateRight90()
+        {
+            int t = X;
+            X = Y;
+            Y = -t;
         }
 
         public override bool Equals(object obj)
