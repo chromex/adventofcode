@@ -1,5 +1,4 @@
 ﻿using AoCUtil;
-using System.Collections.Generic;
 
 namespace aoc2016
 {

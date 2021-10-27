@@ -11,12 +11,12 @@ namespace AoCUtil
         {
             Width = width;
             Height = height;
-            Data = new T[height, width];
+            Data = new T[width, height];
         }
 
         public Matrix(Matrix<T> other) : this(other.Width, other.Height)
         {
-            ForEachCoord((row, col) => Data[row, col] = other.Data[row, col]);
+            ForEachCoord((col, row) => Data[col, row] = other.Data[col, row]);
         }
 
         public Matrix(IEnumerable<T[]> data) : this(data.First().Count(), data.Count())
@@ -32,9 +32,9 @@ namespace AoCUtil
         public override string ToString()
         {
             StringBuilder sb = new();
-            for (int x = 0; x < Width; ++x)
+            for (int y = 0; y < Height; ++y)
             {
-                for (int y = 0; y < Height; ++y)
+                for (int x = 0; x < Width; ++x)
                 {
                     sb.Append(Data[x, y]);
                 }
@@ -50,29 +50,35 @@ namespace AoCUtil
                 yield return GetRow(row);
         }
 
-        public void SetRow(int row, T[] d)
-        {
-            for (int idx = 0; idx < Width; ++idx)
-                Data[row, idx] = d[idx];
-        }
-
         public T[] GetRow(int row)
         {
             T[] ret = new T[Width];
             for (int idx = 0; idx < Width; ++idx)
-                ret[idx] = Data[row, idx];
+                ret[idx] = Data[idx, row];
             return ret;
+        }
+
+        public void SetRow(int row, T[] d)
+        {
+            for (int idx = 0; idx < Width; ++idx)
+                Data[idx, row] = d[idx];
         }
 
         public T[] GetCol(int col)
         {
-            T[] ret = new T[Width];
+            T[] ret = new T[Height];
             for (int idx = 0; idx < Height; ++idx)
-                ret[idx] = Data[idx, col];
+                ret[idx] = Data[col, idx];
             return ret;
         }
 
-        public T LoseGet(int x, int y)
+        public void SetCol(int col, T[] d)
+        {
+            for (int idx = 0; idx < Height; ++idx)
+                Data[col, idx] = d[idx];
+        }
+
+        public T LooseGet(int x, int y)
         {
             if (x >= 0 && x < Width && y >= 0 && y < Height)
             {
@@ -85,14 +91,14 @@ namespace AoCUtil
         public void FlipV()
         {
             T[,] flipped = new T[Width, Height];
-            ForEachCoord((row, col) => flipped[Height - row - 1, col] = Data[row, col]);
+            ForEachCoord((col, row) => flipped[col, Height - row - 1] = Data[col, row]);
             Data = flipped;
         }
 
         public void FlipH()
         {
             T[,] flipped = new T[Width, Height];
-            ForEachCoord((row, col) => flipped[row, Width - col - 1] = Data[row, col]);
+            ForEachCoord((col, row) => flipped[Width - col - 1, row] = Data[col, row]);
             Data = flipped;
         }
 
@@ -109,7 +115,7 @@ namespace AoCUtil
         {
             for (int row = 0; row < Height; ++row)
                 for (int col = 0; col < Width; ++col)
-                    action(row, col);
+                    action(col, row);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace aoc2015
     {
         private Matrix<char> GetMap() => new(Input.Select(line => line.ToCharArray()));
 
-        private int CountNeighbor(int x, int y, Matrix<char> map) => map.LoseGet(x, y) == '#' ? 1 : 0;
+        private int CountNeighbor(int x, int y, Matrix<char> map) => map.LooseGet(x, y) == '#' ? 1 : 0;
 
         private int SumNeighbors(int x, int y, Matrix<char> map)
         {

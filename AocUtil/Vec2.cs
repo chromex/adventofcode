@@ -23,6 +23,12 @@ namespace AoCUtil
             Y = int.Parse(split[1]);
         }
 
+        public Vec2(string x, string y)
+        {
+            X = int.Parse(x);
+            Y = int.Parse(y);
+        }
+
         public override string ToString()
         {
             return $"{X},{Y}";
