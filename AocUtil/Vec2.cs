@@ -29,6 +29,9 @@ namespace AoCUtil
             Y = int.Parse(y);
         }
 
+        public Vec2(string[] coords) : this(coords[0], coords[1])
+        { }
+
         public override string ToString()
         {
             return $"{X},{Y}";
