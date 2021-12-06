@@ -5,7 +5,7 @@ namespace aoc2021
 {
     class Day_01 : BetterBaseDay
     {
-        public override string Solve_1()
+        public override string P1()
         {
             int[] depths = Input.Select(s => int.Parse(s)).ToArray();
             int sum = 0;
@@ -18,7 +18,7 @@ namespace aoc2021
 
         private static int Sum(int[] depths, int idx) => depths[idx] + depths[idx + 1] + depths[idx + 2];
 
-        public override string Solve_2()
+        public override string P2()
         {
             int[] depths = Input.Select(s => int.Parse(s)).ToArray();
             int sum = 0;

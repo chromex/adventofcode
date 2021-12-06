@@ -13,7 +13,7 @@ namespace AdventOfCode
             instructions = Input.Select(str => new Inst() { Move = str[0].ToString(), Amount = int.Parse(str.Substring(1)) }).ToList();
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             Vec2 pos = new Vec2();
             Vec2 face = new Vec2(1, 0);
@@ -35,7 +35,7 @@ namespace AdventOfCode
             return $"{pos.Manhattan}";
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             Vec2 pos = new Vec2();
             Vec2 waypoint = new Vec2(10, 1);

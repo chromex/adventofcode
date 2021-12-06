@@ -15,14 +15,14 @@ namespace AdventOfCode
             numbers = Input.Select(str => long.Parse(str)).ToList();
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             List<long> set = numbers.GetRange(0, prevCount).ToList();
 
             return $"{FindBadSum(set)}";
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             List<long> set = numbers.GetRange(0, prevCount).ToList();
 

@@ -28,7 +28,7 @@ namespace AdventOfCode
         private int acc = 0;
         private int pos = 0;
 
-        public override string Solve_1()
+        public override string P1()
         {
             RunUntilDouble();
             return $"{acc}";
@@ -75,7 +75,7 @@ namespace AdventOfCode
             }
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             for (int index = 0; index < instructions.Count; ++index)
             {

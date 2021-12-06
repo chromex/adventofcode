@@ -52,12 +52,12 @@ namespace AdventOfCode
             return result;
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             return Input.Select(line => Comp(new Parser(line), false)).Sum().ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return Input.Select(line => Comp(new Parser(line), true)).Sum().ToString();
         }

@@ -36,14 +36,14 @@ namespace aoc2015
             }
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             Scan(GetContainers(), 0, new List<int>());
 
             return Combos.Values.Sum().ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             int shortest = int.MaxValue;
             Combos.ForEach(kvp => shortest = Math.Min(kvp.Key.Split("-").Count(), shortest));

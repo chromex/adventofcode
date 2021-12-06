@@ -25,7 +25,7 @@ namespace aoc2016
             }
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             Vec2 pos = new();
             Vec2 heading = new(0, 1);
@@ -47,7 +47,7 @@ namespace aoc2016
             return pos.Manhattan.ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return _second;
         }

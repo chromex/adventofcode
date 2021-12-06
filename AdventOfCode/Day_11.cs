@@ -21,7 +21,7 @@ namespace AdventOfCode
             return orig.Select(o => new string(o).ToArray()).ToList();
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             return Compute(4, Occupied1);
         }
@@ -31,7 +31,7 @@ namespace AdventOfCode
             return input[y + dy][x + dx] == '#';
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return Compute(5, Occupied2);
         }

@@ -1,10 +1,11 @@
 ﻿using AoCHelper;
+using AoCUtil;
 using System.Diagnostics;
 using System.Linq;
 
 namespace AdventOfCode
 {
-    public class Day_03 : BaseDay
+    public class Day_03 : BetterBaseDay
     {
         private Map map;
 
@@ -13,12 +14,12 @@ namespace AdventOfCode
             map = new Map(InputFilePath);
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             return $"{SumTrees(map, 3, 1)}";
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             int v1 = SumTrees(map, 1, 1);
             int v2 = SumTrees(map, 3, 1);

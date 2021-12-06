@@ -6,7 +6,7 @@ namespace aoc2015
     {
         private readonly static int Target = 34000000;
 
-        public override string Solve_1()
+        public override string P1()
         {
             int[] houses = new int[1000000];
 
@@ -29,7 +29,7 @@ namespace aoc2015
             return "no";
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             int[] houses = new int[1000000];
 

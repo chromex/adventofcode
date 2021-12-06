@@ -8,7 +8,7 @@ namespace AdventOfCode
     public class Day_23 : BetterBaseDay
     {
         // 45798623
-        public override string Solve_1()
+        public override string P1()
         {
             RingList<int> cups = new RingList<int>(Input[0].Select(ch => ch - '0'));
             PlayGame2(cups, 100,false);
@@ -142,7 +142,7 @@ namespace AdventOfCode
             }
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             RingList<int> cups;
             {

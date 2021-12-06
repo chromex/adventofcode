@@ -5,7 +5,7 @@ namespace aoc2015
 {
     class Day_03 : BetterBaseDay
     {
-        public override string Solve_1()
+        public override string P1()
         {
             Vec2 pos = new();
             HashSet<string> map = new();
@@ -32,7 +32,7 @@ namespace aoc2015
             }
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             Vec2 p1 = new(), p2 = new();
             HashSet<string> map = new();

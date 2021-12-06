@@ -9,7 +9,7 @@ namespace aoc2016
     {
         private static readonly MD5 _md5 = MD5.Create();
 
-        public override string Solve_1()
+        public override string P1()
         {
             string code = "";
 
@@ -27,7 +27,7 @@ namespace aoc2016
             return code;
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             char[] code = { '-', '-', '-', '-', '-', '-', '-', '-' };
 

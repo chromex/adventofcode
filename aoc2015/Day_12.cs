@@ -7,7 +7,7 @@ namespace aoc2015
 {
     class Day_12 : BetterBaseDay
     {
-        public override string Solve_1()
+        public override string P1()
         {
             Parser p = new(Input[0]);
 
@@ -84,7 +84,7 @@ namespace aoc2015
             return redFound ? 0 : numbers.Sum();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return Parse(new Parser(Input[0])).ToString();
         }

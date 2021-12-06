@@ -8,7 +8,7 @@ namespace aoc2015
     {
         private static readonly MD5 _md5 = MD5.Create();
 
-        public override string Solve_1()
+        public override string P1()
         {
             for (int i = 0; i < int.MaxValue; ++i)
             {
@@ -24,7 +24,7 @@ namespace aoc2015
             return "lol";
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             for (int i = 0; i < int.MaxValue; ++i)
             {

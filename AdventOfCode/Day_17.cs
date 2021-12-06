@@ -28,7 +28,7 @@ namespace AdventOfCode
             return space[GetIndex(x, y, z, w)];
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             for (int y = 0; y < Input.Length; ++y)
                 for (int x = 0; x < Input[y].Length; ++x)
@@ -77,7 +77,7 @@ namespace AdventOfCode
             return total.ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             // Note: just updated Solve_1 to do part 2. Didn't want to mess with supporting 3 and 4 dimensions.
             return "err";

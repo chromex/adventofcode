@@ -17,7 +17,7 @@ namespace aoc2015
             return 2 * s1 + 2 * s2 + 2 * s3 + smallest;
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             return Input.Select(line => GetSqft(line)).Sum().ToString();
         }
@@ -33,7 +33,7 @@ namespace aoc2015
             return smallest + sides[0] * sides[1] * sides[2];
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return Input.Select(line => GetRibbon(line)).Sum().ToString();
         }

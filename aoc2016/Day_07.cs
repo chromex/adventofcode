@@ -78,12 +78,12 @@ namespace aoc2016
             return hypernetSequences.Any(hyper => babs.Any(bab => hyper.Contains(bab)));
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             return Input.Count(line => IsTLS(line)).ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return Input.Count(line => IsSSL(line)).ToString();
         }

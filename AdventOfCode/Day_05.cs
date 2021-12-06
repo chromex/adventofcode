@@ -1,4 +1,5 @@
 ﻿using AoCHelper;
+using AoCUtil;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,14 +7,14 @@ using System.Linq;
 
 namespace AdventOfCode
 {
-    public class Day_05 : BaseDay
+    public class Day_05 : BetterBaseDay
     {
         private string[] lines;
 
         public Day_05()
         { lines = File.ReadAllLines(InputFilePath); }
 
-        public override string Solve_1()
+        public override string P1()
         {
             int highId = 0;
             foreach (string line in lines)
@@ -24,7 +25,7 @@ namespace AdventOfCode
             return $"{highId}";
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             List<int> ids = lines.Select(line => GetId(line)).ToList();
             ids.Sort();

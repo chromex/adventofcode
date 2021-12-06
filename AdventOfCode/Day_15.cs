@@ -7,7 +7,7 @@ namespace AdventOfCode
 {
     public class Day_15 : BetterBaseDay
     {
-        public override string Solve_1()
+        public override string P1()
         {
             List<long> numbers = Input[0].Split(",").Select(str => long.Parse(str)).ToList();
 
@@ -28,7 +28,7 @@ namespace AdventOfCode
             return numbers.Last().ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             Dictionary<long, Tuple<long, long>> history = new Dictionary<long, Tuple<long, long>>();
 

@@ -87,7 +87,7 @@ namespace aoc2015
             return false;
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             List<string[]> lines = Input.Select(line => line.Split(" ")).ToList();
 
@@ -109,7 +109,7 @@ namespace aoc2015
             return settledWires["a"].ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             // Updated the input source change line 335 to go from "1674 -> b" to "46065 -> b"
 

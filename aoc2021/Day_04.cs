@@ -7,7 +7,7 @@ namespace aoc2021
 {
     class Day_04 : BetterBaseDay
     {
-        public override string Solve_1()
+        public override string P1()
         {
             int[] pool = Input[0].Split(',').Select(s => s.AsInt()).ToArray();
 
@@ -80,7 +80,7 @@ namespace aoc2021
             return sum;
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             int[] pool = Input[0].Split(',').Select(s => s.AsInt()).ToArray();
 

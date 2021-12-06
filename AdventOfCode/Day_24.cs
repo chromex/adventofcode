@@ -16,7 +16,7 @@ namespace AdventOfCode
 
         private Dictionary<string, bool> map;
 
-        public override string Solve_1()
+        public override string P1()
         {
             map = new();
 
@@ -67,7 +67,7 @@ namespace AdventOfCode
             neighbors[pos.ToString()] += 1;
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             for (int count = 0; count < 100; ++count)
             {

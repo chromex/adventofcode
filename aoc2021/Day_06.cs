@@ -9,12 +9,12 @@ namespace aoc2021
 {
     class Day_06 : BetterBaseDay
     {
-        public override string Solve_1()
+        public override string P1()
         {
             return "no";
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return "no";
         }

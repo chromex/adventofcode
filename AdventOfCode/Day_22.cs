@@ -10,7 +10,7 @@ namespace AdventOfCode
         List<int> base1 = new List<int>();
         List<int> base2 = new List<int>();
 
-        public override string Solve_1()
+        public override string P1()
         {
             int nCards = (Input.Length - 3) / 2;
             base1 = Input.ToList().GetRange(1, nCards).Select(str => int.Parse(str)).ToList();
@@ -20,7 +20,7 @@ namespace AdventOfCode
             return Math.Max(result.Item1, result.Item2).ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             var result = Combat(base1.ToList(), base2.ToList(), true);
             return Math.Max(result.Item1, result.Item2).ToString();

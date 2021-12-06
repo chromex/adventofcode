@@ -40,7 +40,7 @@ namespace aoc2016
             }
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             Matrix<bool> screen = new(50, 6);
 
@@ -57,7 +57,7 @@ namespace aoc2016
             return screen.Rows().Sum(row => row.Count(e => e)).ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             // To get this, break on the return of Solve_1 to see the code printed to console
             return "no";

@@ -75,7 +75,7 @@ namespace aoc2015
             }
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             char[] pass = "vzbxkghb".ToCharArray();
 
@@ -87,7 +87,7 @@ namespace aoc2015
             return string.Join("", pass);
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             char[] pass = "vzbxxyzz".ToCharArray();
 

@@ -13,12 +13,12 @@ namespace AdventOfCode
             passwords = Input.Select(line => ParsePEntry(line)).ToList();
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             return $"{passwords.Where(entry => Valid(entry)).Count()}";
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return $"{passwords.Where(entry => Valid2(entry)).Count()}";
         }

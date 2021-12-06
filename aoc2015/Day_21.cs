@@ -109,7 +109,7 @@ namespace aoc2015
             }
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             List<Item> items = new();
 
@@ -125,7 +125,7 @@ namespace aoc2015
             return _min.ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return _max.ToString();
         }

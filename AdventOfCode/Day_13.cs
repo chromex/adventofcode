@@ -10,7 +10,7 @@ namespace AdventOfCode
         public Day_13()
         { }
 
-        public override string Solve_1()
+        public override string P1()
         {
             int target = int.Parse(Input[0]);
             List<long> ids = Input[1].Split(",").Where(str => !str.Equals("x")).Select(str => long.Parse(str)).ToList();
@@ -31,7 +31,7 @@ namespace AdventOfCode
             return $"{(minArrival - target) * bestId}";
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             List<long> ids = Input[1].Split(",").Select(str => str == "x" ? 0 : long.Parse(str)).ToList();
             Tuple<long, long>[] primes = ids.Where(id => id != 0).Select(id => Tuple.Create<long, long>(id, ids.FindIndex(subId => id == subId))).OrderByDescending(i => i.Item1).ToArray();

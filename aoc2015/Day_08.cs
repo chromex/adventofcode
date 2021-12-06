@@ -29,7 +29,7 @@ namespace aoc2015
             return sum;
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             return Input.Sum(l => l.Length - SumChars(l)).ToString();
         }
@@ -51,7 +51,7 @@ namespace aoc2015
             return sum;
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return Input.Sum(l => SumEncoded(l) - l.Length).ToString();
         }

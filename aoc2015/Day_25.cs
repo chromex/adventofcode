@@ -32,12 +32,12 @@ namespace aoc2015
             return val;
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             return Search(new Vec2(3029, 2947)).ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return "free";
         }

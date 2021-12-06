@@ -57,7 +57,7 @@ namespace aoc2016
 
         private Dictionary<int, Bot> _bots;
 
-        public override string Solve_1()
+        public override string P1()
         {
             _bots = GetBots(Input);
 
@@ -69,7 +69,7 @@ namespace aoc2016
             return _bots.Values.First(b => b.TheOne).id.ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return (_bots[-1].v1 * _bots[-2].v1 * _bots[-3].v1).ToString();
         }

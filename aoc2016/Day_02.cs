@@ -23,7 +23,7 @@ namespace aoc2016
             return 'c';
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             int x = 1, y = 1;
 
@@ -63,7 +63,7 @@ namespace aoc2016
             return Map[y][x] != '0';
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             int x = 0, y = 2;
             string code = "";

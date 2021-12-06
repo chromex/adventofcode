@@ -21,12 +21,12 @@ namespace AdventOfCode
             }
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             return $"{deltas.Where(val => val == 1).Count() * deltas.Where(val => val == 3).Count()}";
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             List<int> sumRuns = new List<int>();
 

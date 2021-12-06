@@ -34,7 +34,7 @@ namespace AdventOfCode
             return rule;
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             int sum = 0;
 
@@ -64,7 +64,7 @@ namespace AdventOfCode
             return false;
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             int sum = SumBags(rules["shiny gold"]);
             return $"{sum - 1}";

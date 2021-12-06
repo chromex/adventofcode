@@ -10,7 +10,7 @@ namespace AdventOfCode
         List<List<string>> foods = new List<List<string>>();
         Dictionary<string, Tuple<string, List<string>>> allergenData = new Dictionary<string, Tuple<string, List<string>>>();
 
-        public override string Solve_1()
+        public override string P1()
         {
             InputParsers.ForEach(parser =>
             {
@@ -42,7 +42,7 @@ namespace AdventOfCode
             return foods.Select(f => f.Count()).Sum().ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return string.Join(",", allergenData.Keys.OrderBy(str => str).Select(allergen => allergenData[allergen].Item1));
         }

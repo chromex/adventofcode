@@ -67,7 +67,7 @@ namespace aoc2015
             }
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             State s = new();
             Sim(s);
@@ -75,7 +75,7 @@ namespace aoc2015
             return s.B.ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             State s = new() { A = 1 };
             Sim(s);

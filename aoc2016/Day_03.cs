@@ -6,7 +6,7 @@ namespace aoc2016
 {
     class Day_03 : BetterBaseDay
     {
-        public override string Solve_1()
+        public override string P1()
         {
             int n = 0;
             Input.Select(line => line.Split(" ", System.StringSplitOptions.RemoveEmptyEntries)).ForEach(spl =>
@@ -30,7 +30,7 @@ namespace aoc2016
             return set[0] + set[1] > set[2];
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             string[][] input = Input.Select(line => line.Split(" ", System.StringSplitOptions.RemoveEmptyEntries)).ToArray();
 

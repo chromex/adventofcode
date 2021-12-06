@@ -85,7 +85,7 @@ namespace aoc2015
             }
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             Load();
 
@@ -94,7 +94,7 @@ namespace aoc2015
             return maxd.ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             maxd = int.MinValue;
 

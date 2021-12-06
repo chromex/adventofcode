@@ -5,7 +5,7 @@ namespace aoc2021
 {
     class Day_02 : BetterBaseDay
     {
-        public override string Solve_1()
+        public override string P1()
         {
             Vec2 pos = new();
 
@@ -22,7 +22,7 @@ namespace aoc2021
             return (pos.X * pos.Y).ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             Vec2 pos = new();
             int aim = 0;

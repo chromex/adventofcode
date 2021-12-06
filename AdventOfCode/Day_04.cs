@@ -14,12 +14,12 @@ namespace AdventOfCode
             passports = Util.ParseRecords<Passport>(Input, ":");
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             return $"{passports.Count(passport => passport.IsValid())}";
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return $"{passports.Count(passport => passport.IsValid2())}";
         }

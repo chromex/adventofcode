@@ -88,7 +88,7 @@ namespace aoc2015
             }
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             Input.ForEach(line => Do(line));
 
@@ -114,7 +114,7 @@ namespace aoc2015
             }
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             Input.ForEach(line => Do2(line));
 

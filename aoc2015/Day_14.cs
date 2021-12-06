@@ -51,7 +51,7 @@ namespace aoc2015
             return d.Dist;
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             int max = int.MinValue;
             Input.ForEach(line =>
@@ -64,7 +64,7 @@ namespace aoc2015
             return max.ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             List<Deer> deers = new();
             Input.ForEach(line =>

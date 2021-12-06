@@ -7,7 +7,7 @@ namespace aoc2021
 {
     class Day_03 : BetterBaseDay
     {
-        public override string Solve_1()
+        public override string P1()
         {
             int[] sums = new int[Input[0].Length];
 
@@ -63,7 +63,7 @@ namespace aoc2021
             return orig.Where(line => line[index] == mostCommon).ToList();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             List<string> oxygenValues = Input.ToList();
             List<string> co2Values = Input.ToList();

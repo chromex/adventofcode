@@ -1,11 +1,10 @@
 ﻿using AoCUtil;
-using AoCHelper;
 using System.Collections.Generic;
 using System.IO;
 
 namespace AdventOfCode
 {
-    public class Day_01 : BaseDay
+    public class Day_01 : BetterBaseDay
     {
         private readonly List<int> _numbers;
 
@@ -14,7 +13,7 @@ namespace AdventOfCode
             _numbers = GetExpenseNumbers();
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             for (int index1 = 0; index1 < _numbers.Count - 2; ++index1)
             {
@@ -30,7 +29,7 @@ namespace AdventOfCode
             return "err";
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             for (int index1 = 0; index1 < _numbers.Count - 3; ++index1)
             {

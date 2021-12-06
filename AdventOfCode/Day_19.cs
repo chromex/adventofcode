@@ -9,7 +9,7 @@ namespace AdventOfCode
     {
         private Dictionary<int, string> rules;
 
-        public override string Solve_1()
+        public override string P1()
         {
             rules = Input
                 .Where(line => line.Contains(":"))
@@ -86,7 +86,7 @@ namespace AdventOfCode
             return (count[31] > 0 && count[31] < count[42]) ? offset : 0;
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return Input.Where(line => !line.Contains(":") && !string.IsNullOrEmpty(line) && Override(line) == line.Length).Count().ToString();
         }

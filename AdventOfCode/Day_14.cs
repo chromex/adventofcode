@@ -9,7 +9,7 @@ namespace AdventOfCode
         public Day_14()
         { }
 
-        public override string Solve_1()
+        public override string P1()
         {
             ulong zeroMask = ulong.MaxValue;
             ulong oneMask = 0;
@@ -58,7 +58,7 @@ namespace AdventOfCode
             return sum.ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             string mask = string.Empty;
             Dictionary<string, long> memory = new Dictionary<string, long>();

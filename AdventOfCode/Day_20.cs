@@ -80,7 +80,7 @@ namespace AdventOfCode
             }
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             for (int idx = 0; idx < Input.Length; idx += 12)
             {
@@ -105,7 +105,7 @@ namespace AdventOfCode
             return result.ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             Matrix<char> map = new Matrix<char>((int)Math.Sqrt(this.tiles.Count) * 8, (int)Math.Sqrt(this.tiles.Count) * 8);
             Tile topLeft = tiles.Values.Where(tile => tile.neighbor[TOP] == 0 && tile.neighbor[LEFT] == 0).First();

@@ -9,7 +9,7 @@ namespace AdventOfCode
 {
     public class Day_25 : BetterBaseDay
     {
-        public override string Solve_1()
+        public override string P1()
         {
             long doorPubKey = long.Parse(Input[0]);
             long cardPubKey = long.Parse(Input[1]);
@@ -28,7 +28,7 @@ namespace AdventOfCode
             return val.ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return "err";
         }

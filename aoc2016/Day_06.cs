@@ -4,7 +4,7 @@ namespace aoc2016
 {
     class Day_06 : BetterBaseDay
     {
-        public override string Solve_1()
+        public override string P1()
         {
             FrequencyTable<char>[] table = new FrequencyTable<char>[Input[0].Length];
             for (int i = 0; i < table.Length; ++i)
@@ -23,7 +23,7 @@ namespace aoc2016
             return code;
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             FrequencyTable<char>[] table = new FrequencyTable<char>[Input[0].Length];
             for (int i = 0; i < table.Length; ++i)

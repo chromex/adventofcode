@@ -1,6 +1,7 @@
 ﻿using AoCHelper;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AoCUtil
 {
@@ -22,5 +23,18 @@ namespace AoCUtil
         }
 
         public Parser[] InputParsers => Input.Select(line => new Parser(line)).ToArray();
+
+        public sealed override ValueTask<string> Solve_1()
+        {
+            return ValueTask.FromResult(P1());
+        }
+
+        public sealed override ValueTask<string> Solve_2()
+        {
+            return ValueTask.FromResult(P2());
+        }
+
+        public abstract string P1();
+        public abstract string P2();
     }
 }

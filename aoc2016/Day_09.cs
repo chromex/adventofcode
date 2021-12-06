@@ -59,12 +59,12 @@ namespace aoc2016
             return count;
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             return Decomp(Input[0]).Count(c => !char.IsWhiteSpace(c)).ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return Decomp2(new StringView(Input[0])).ToString();
         }

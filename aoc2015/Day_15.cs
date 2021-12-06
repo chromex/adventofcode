@@ -42,7 +42,7 @@ namespace aoc2015
             return cals;
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             Ingredient[] ingredients = GetIngredients();
             int highest = int.MinValue;
@@ -71,7 +71,7 @@ namespace aoc2015
             return highest.ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             Ingredient[] ingredients = GetIngredients();
             int highest = int.MinValue;

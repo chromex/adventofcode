@@ -29,7 +29,7 @@ namespace aoc2015
             return $"{before}{sub}{after}";
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             HashSet<string> variants = new();
 
@@ -84,7 +84,7 @@ namespace aoc2015
             return -1;
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return Quest(Molecule, 0, GetSubs()).ToString();
         }

@@ -9,14 +9,14 @@ namespace AdventOfCode
         public Day_06()
         {}
 
-        public override string Solve_1()
+        public override string P1()
         {
             List<string> records = Util.ParseRecords(Input, string.Empty);
 
             return $"{records.Select(str => str.Distinct().Count()).Sum()}";
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             var sets = Util.ParseSets(Input);
 

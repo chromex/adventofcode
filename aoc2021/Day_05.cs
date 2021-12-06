@@ -5,7 +5,7 @@ namespace aoc2021
 {
     class Day_05 : BetterBaseDay
     {
-        public override string Solve_1()
+        public override string P1()
         {
             Matrix<int> map = new(1000, 1000);
 
@@ -43,7 +43,7 @@ namespace aoc2021
             return sum.ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             Matrix<int> map = new(1000, 1000);
 

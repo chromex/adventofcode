@@ -53,7 +53,7 @@
 //            Console.WriteLine($"F1 {string.Join(" ", map[1])}");
 //        }
 
-//        public override string Solve_1()
+//        public override string P1()
 //        {
 //            PrintMap(LoadMap(Input));
 
@@ -63,7 +63,7 @@
 //            return "no";
 //        }
 
-//        public override string Solve_2()
+//        public override string P2()
 //        {
 //            return "no";
 //        }

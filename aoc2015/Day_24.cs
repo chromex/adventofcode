@@ -92,7 +92,7 @@ namespace aoc2015
             }
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             int[] packages = Input.Select(line => int.Parse(line)).OrderByDescending(i => i).ToArray();
 
@@ -151,7 +151,7 @@ namespace aoc2015
             return false;
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             FastList<int> packages = new(Input.Select(line => int.Parse(line)).OrderByDescending(i => i).ToArray());
 

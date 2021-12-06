@@ -30,13 +30,13 @@ namespace aoc2015
             return LookAndSay(count - 1, sb.ToString());
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             string s = LookAndSay(40, "1113222113");
             return s.Length.ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             string s = LookAndSay(50, "1113222113");
             return s.Length.ToString();

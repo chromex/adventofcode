@@ -21,7 +21,7 @@ namespace AdventOfCode
             }
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             int index = 0;
             while (!string.IsNullOrEmpty(Input[index]))
@@ -52,7 +52,7 @@ namespace AdventOfCode
             return sum.ToString();
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             long sum = 1;
             while (rules.Count > 0)

@@ -68,7 +68,7 @@ namespace aoc2015
             public string Name { get; }
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             Sue[] sues = Input.Select(line => new Sue(line)).ToArray();
 
@@ -88,7 +88,7 @@ namespace aoc2015
             return check[0].Name;
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             Sue[] sues = Input.Select(line => new Sue(line)).ToArray();
 

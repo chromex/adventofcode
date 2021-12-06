@@ -50,7 +50,7 @@ namespace aoc2016
             return check == Checksum(counts);
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             ulong sum = 0;
             int sector = 0;
@@ -79,7 +79,7 @@ namespace aoc2016
             return new string(front.Select(ch => Shift(ch, sector)).ToArray());
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             int result = 0;
 

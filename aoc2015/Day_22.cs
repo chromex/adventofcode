@@ -161,7 +161,7 @@ namespace aoc2015
             }
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             Player p = new() { Health = 50, Mana = 500 };
             Boss b = new() { Health = 55, Damage = 8 };
@@ -173,7 +173,7 @@ namespace aoc2015
 
         private bool _hard = false;
 
-        public override string Solve_2()
+        public override string P2()
         {
             _min = int.MaxValue;
             _hard = true;

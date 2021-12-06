@@ -26,7 +26,7 @@ namespace aoc2015
             return dupe && vowels >= 3;
         }
 
-        public override string Solve_1()
+        public override string P1()
         {
             return Input.Where(s => Nice(s)).Count().ToString();
         }
@@ -53,7 +53,7 @@ namespace aoc2015
             return false;
         }
 
-        public override string Solve_2()
+        public override string P2()
         {
             return Input.Where(s => Nicer(s)).Count().ToString();
         }
