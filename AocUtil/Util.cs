@@ -155,5 +155,21 @@ namespace AoCUtil
             Array.Copy(arr, 0, arr, shift, arr.Length - shift);
             Array.Copy(buffer, 0, arr, 0, shift);
         }
+
+        public static uint ParseBinary(string str)
+        {
+            uint result = 0;
+            uint adder = 1;
+
+            for (int i = str.Length - 1; i >= 0; --i)
+            {
+                if (str[i] == '1') 
+                    result += adder;
+
+                adder *= 2;
+            }
+
+            return result;
+        }
     }
 }
