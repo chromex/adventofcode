@@ -12,24 +12,15 @@ namespace aoc2021
 
             for (int d = 0; d < days; ++d)
             {
-                ulong nZero = numAge[0];
-                Util.LeftShiftArray(numAge, 1);
-                numAge[6] += nZero;
+                numAge.RotateLeft();
+                numAge[6] += numAge[8];
             }
 
-            ulong sum = 0;
-            numAge.ForEach(a => sum += a);
-            return sum.ToString();
+            return numAge.Sum().ToString();
         }
 
-        public override string P1()
-        {
-            return Run(80);
-        }
+        public override string P1() => Run(80);
 
-        public override string P2()
-        {
-            return Run(256);
-        }
+        public override string P2() => Run(256);
     }
 }

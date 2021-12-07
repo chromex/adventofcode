@@ -6,6 +6,9 @@ namespace AoCUtil
 {
     public static class Extensions
     {
+        // Enumerable
+        //
+
         public static void ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
         {
             foreach (T item in enumeration)
@@ -29,6 +32,17 @@ namespace AoCUtil
                 yield return str.Split(c);
         }
 
+        // This is a missing special case in linq
+        public static ulong Sum(this IEnumerable<ulong> enumeration)
+        {
+            ulong sum = 0;
+            enumeration.ForEach(v => sum += v);
+            return sum;
+        }
+
+        // Lists
+        //
+
         public static void Add<T>(this List<T> list, params T[] args)
         {
             foreach (T val in args)
@@ -45,7 +59,18 @@ namespace AoCUtil
             return val;
         }
 
+        // String Parsing
+        //
+
         public static int AsInt(this string str) => int.Parse(str);
         public static ulong AsULong(this string str) => ulong.Parse(str);
+
+        // Arrays
+        //
+
+        public static void RotateLeft<T>(this T[] arr) => Util.LeftShiftArray(arr, 1);
+        public static void RotateLeft<T>(this T[] arr, int amount) => Util.LeftShiftArray(arr, amount);
+        public static void RotateRight<T>(this T[] arr) => Util.RightShiftArray(arr, 1);
+        public static void RotateRight<T>(this T[] arr, int amount) => Util.RightShiftArray(arr, amount);
     }
 }
