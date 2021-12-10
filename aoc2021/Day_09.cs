@@ -58,8 +58,6 @@ namespace aoc2021
 
             lows.ForEach(v => sizes.Add(GetBasinSize(map, v.X, v.Y)));
 
-            Console.WriteLine(map);
-
             int res = 1;
             sizes.OrderByDescending(s => s).Take(3).ForEach(s => res *= s);
 
