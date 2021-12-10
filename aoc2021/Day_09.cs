@@ -36,12 +36,12 @@ namespace aoc2021
         private static int GetBasinSize(Matrix<int> map, int x, int y)
         {
             int cur;
-            if (!map.TryGet(x, y, out cur) || cur < 0 || cur >= 9)
+            if (!map.TryGet(x, y, out cur) || map.IsMarked(x, y) || cur >= 9)
             {
                 return 0;
             }
 
-            map.Data[x, y] = -99;
+            map.Mark(x, y);
 
             return 1 +
                 GetBasinSize(map, x + 1, y) +
@@ -58,7 +58,7 @@ namespace aoc2021
 
             lows.ForEach(v => sizes.Add(GetBasinSize(map, v.X, v.Y)));
 
-            Console.Write(map);
+            Console.WriteLine(map);
 
             int res = 1;
             sizes.OrderByDescending(s => s).Take(3).ForEach(s => res *= s);

@@ -12,6 +12,7 @@ namespace AoCUtil
             Width = width;
             Height = height;
             Data = new T[width, height];
+            Marks = new bool[width, height];
         }
 
         public Matrix(Matrix<T> other) : this(other.Width, other.Height)
@@ -28,6 +29,7 @@ namespace AoCUtil
         public int Width { get; private set; }
         public int Height { get; private set; }
         public T[,] Data { get; private set; }
+        public bool[,] Marks { get; private set; }
 
         public override string ToString()
         {
@@ -36,7 +38,7 @@ namespace AoCUtil
             {
                 for (int x = 0; x < Width; ++x)
                 {
-                    sb.Append($"{Data[x, y]} ");
+                    sb.Append($"{Data[x, y],4}{(Marks[x, y] ? '*' : ' ')} ");
                 }
 
                 sb.AppendLine();
@@ -99,6 +101,10 @@ namespace AoCUtil
 
             return default(T);
         }
+
+        public void Mark(int x, int y) => Marks[x, y] = true;
+        public bool IsMarked(int x, int y) => Marks[x, y];
+        public void ResetMark(int x, int y) => Marks[x, y] = false;
 
         public void FlipV()
         {
