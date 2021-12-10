@@ -36,7 +36,7 @@ namespace AoCUtil
             {
                 for (int x = 0; x < Width; ++x)
                 {
-                    sb.Append(Data[x, y]);
+                    sb.Append($"{Data[x, y]} ");
                 }
 
                 sb.AppendLine();
@@ -76,6 +76,18 @@ namespace AoCUtil
         {
             for (int idx = 0; idx < Height; ++idx)
                 Data[col, idx] = d[idx];
+        }
+
+        public bool TryGet(int x, int y, out T ret)
+        {
+            if (x >= 0 && x < Width && y >= 0 && y < Height)
+            {
+                ret = Data[x, y];
+                return true;
+            }
+
+            ret = default(T);
+            return false;
         }
 
         public T LooseGet(int x, int y)
