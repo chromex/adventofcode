@@ -35,59 +35,40 @@ namespace aoc2021
             return 0;
         }
 
-        private static int Parse(string line, int idx, ref ulong retScore)
+        private static ulong Process(string line)
         {
-            char c = line[idx];
+            List<char> stack = new();
 
-            if ((idx + 1) >= line.Length)
+            line.ForEach(c =>
             {
-                retScore = (retScore * 5) + CompScore(c);
-                return idx + 1;
-            }
-
-            char n = line[idx + 1];
-
-            if (IsMatch(c, n))
-            {
-                return idx + 2;
-            }
-            else if (IsEndChar(n))
-            {
-                throw new Exception($"{c}");
-            }
-
-            int curIdx = idx + 1;
-            while (!IsEndChar(n))
-            {
-                curIdx = Parse(line, curIdx, ref retScore);
-
-                if (curIdx >= line.Length)
+                if (!IsEndChar(c))
                 {
-                    retScore = (retScore * 5) + CompScore(c);
-                    return curIdx;
+                    stack.Push(c);
+                }    
+                else
+                {
+                    char top = stack.Pop();
+
+                    if (!IsMatch(top, c))
+                    {
+                        throw new Exception($"{c}");
+                    }
                 }
+            });
 
-                n = line[curIdx];
-            }
-
-            if (IsMatch(c, n))
+            ulong score = 0;
+            while (stack.Count > 0)
             {
-                return curIdx + 1;
+                score = (score * 5) + CompScore(stack.Pop());
             }
-
-            throw new Exception($"{n}");
+            return score;
         }
 
         private static int Score(string line)
         {
             try
             {
-                ulong s = 0;
-                int idx = 0;
-                do
-                {
-                    idx = Parse(line, idx, ref s);
-                } while (idx < line.Length);
+                Process(line);
             }
             catch (Exception ex)
             {
@@ -116,13 +97,7 @@ namespace aoc2021
             {
                 try
                 {
-                    ulong score = 0;
-                    int idx = 0;
-                    do
-                    {
-                        idx = Parse(line, idx, ref score);
-                    } while (idx < line.Length);
-                    sums.Add(score);
+                    sums.Add(Process(line));
                 }
                 catch (Exception)
                 { }

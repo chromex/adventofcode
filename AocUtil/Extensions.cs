@@ -59,6 +59,20 @@ namespace AoCUtil
             return val;
         }
 
+        public static void Push<T>(this List<T> list, T val) => list.Add(val);
+        
+        public static T Pop<T>(this List<T> list)
+        {
+            if (list.Count > 0)
+            {
+                T ret = list.Last();
+                list.RemoveAt(list.Count - 1);
+                return ret;
+            }
+
+            return default(T);
+        }
+
         // String Parsing
         //
 
