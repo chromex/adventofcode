@@ -1,5 +1,4 @@
 ﻿using AoCUtil;
-using System;
 using System.Linq;
 
 namespace aoc2021
@@ -51,21 +50,18 @@ namespace aoc2021
                 });
 
                 int s = 0;
-                map.ForEachCoord((x, y) =>
+                map.ForEachMarked((x, y) =>
                 {
-                    if (map.IsMarked(x, y))
-                    {
-                        map.Data[x, y] = 0;
-                        map.ResetMark(x, y);
-                        ++flashes;
-                        ++s;
-                    }
+                    map.Data[x, y] = 0;
+                    map.ResetMark(x, y);
+                    ++flashes;
+                    ++s;
                 });
 
                 // For part 2
                 if (s == 100)
                 {
-                    return step.ToString();
+                    return (step + 1).ToString();
                 }
             }
 

@@ -105,6 +105,20 @@ namespace AoCUtil
         public void Mark(int x, int y) => Marks[x, y] = true;
         public bool IsMarked(int x, int y) => Marks[x, y];
         public void ResetMark(int x, int y) => Marks[x, y] = false;
+        public void ResetMarked() => ForEachCoord((x, y) => ResetMark(x, y));
+
+        public int SumMarked()
+        {
+            int sum = 0;
+            
+            ForEachCoord((x, y) =>
+            {
+                if (IsMarked(x, y)) 
+                    ++sum;
+            });
+
+            return sum;
+        }
 
         public void FlipV()
         {
@@ -134,6 +148,15 @@ namespace AoCUtil
             for (int row = 0; row < Height; ++row)
                 for (int col = 0; col < Width; ++col)
                     action(col, row);
+        }
+
+        public void ForEachMarked(Action<int, int> action)
+        {
+            ForEachCoord((x, y) =>
+            {
+                if (IsMarked(x, y))
+                    action(x, y);
+            });
         }
     }
 }
