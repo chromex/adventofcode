@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 
 namespace AoCUtil
@@ -156,14 +157,14 @@ namespace AoCUtil
             Array.Copy(buffer, 0, arr, 0, shift);
         }
 
-        public static uint ParseBinary(string str)
+        public static BigInteger ParseBinary(string str) 
         {
-            uint result = 0;
-            uint adder = 1;
+            BigInteger result = 0;
+            BigInteger adder = 1;
 
             for (int i = str.Length - 1; i >= 0; --i)
             {
-                if (str[i] == '1') 
+                if (str[i] == '1')
                     result += adder;
 
                 adder *= 2;

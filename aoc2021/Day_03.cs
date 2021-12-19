@@ -35,8 +35,8 @@ namespace aoc2021
                 }
             });
 
-            uint gamma = Util.ParseBinary(res);
-            uint epsilon = Util.ParseBinary(res2);
+            uint gamma = (uint)Util.ParseBinary(res);
+            uint epsilon = (uint)Util.ParseBinary(res2);
 
             return (gamma * epsilon).ToString();
         }
