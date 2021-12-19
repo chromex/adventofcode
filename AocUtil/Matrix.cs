@@ -15,6 +15,11 @@ namespace AoCUtil
             Marks = new bool[width, height];
         }
 
+        public Matrix(int width, int height, T defaultValue) : this(width, height)
+        {
+            ForEachCoord((x, y) => Data[x, y] = defaultValue);
+        }
+
         public Matrix(Matrix<T> other) : this(other.Width, other.Height)
         {
             ForEachCoord((col, row) => Data[col, row] = other.Data[col, row]);
@@ -101,6 +106,8 @@ namespace AoCUtil
 
             return default(T);
         }
+
+        public bool IsCoord(int x, int y) => x >= 0 && x < Width && y >= 0 && y < Height;
 
         public void Mark(int x, int y) => Marks[x, y] = true;
         public bool IsMarked(int x, int y) => Marks[x, y];
