@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace aoc2021
 {
@@ -54,6 +52,10 @@ namespace aoc2021
 
             for (int i = 0; i < leftBeacons.Count; ++i)
             {
+                // Early out if it is impossible to find enough beacons matching
+                if (leftBeacons.Count - i + sum < 12)
+                    return false;
+
                 Vec3 l = leftBeacons[i];
 
                 for (int j = 0; j < rightBeacons.Count; ++j)
@@ -68,7 +70,6 @@ namespace aoc2021
                         break;
                     }
                 }
-
             }
 
             return sum >= 12;
@@ -99,12 +100,20 @@ namespace aoc2021
 
         private static bool FindOverlap(Scanner left, Scanner right, HashSet<Vec3> uniques)
         {
+            Vec3 cardinal = new(7, 15, 19);
+            HashSet<Vec3> visited = new();
+
             for (int x = 0; x < 4; ++x)
             {
                 for (int y = 0; y < 4; ++y)
                 {
                     for (int z = 0; z < 4; ++z)
                     {
+                        if (visited.Contains(cardinal))
+                            continue;
+
+                        visited.Add(new Vec3(cardinal));
+
                         Vec3 offset;
                         if (Overlap(left, right, out offset))
                         {
@@ -117,12 +126,15 @@ namespace aoc2021
                         }
 
                         right.RotateZ();
+                        cardinal.RotateAroundZ();
                     }
 
                     right.RotateY();
+                    cardinal.RotateAroundY();
                 }
 
                 right.RotateX();
+                cardinal.RotateAroundX();
             }
 
             return false;

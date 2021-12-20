@@ -1,7 +1,8 @@
 {
   "profiles": {
     "aoc2021": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "19"
     }
   }
 }

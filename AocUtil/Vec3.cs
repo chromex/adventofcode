@@ -18,6 +18,9 @@ namespace AoCUtil
             Z = z;
         }
 
+        public Vec3(Vec3 other) : this(other.X, other.Y, other.Z)
+        { }
+
         public Vec3(string str)
         {
             string[] spl = str.Split(',');
