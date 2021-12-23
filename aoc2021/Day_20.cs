@@ -1,27 +1,11 @@
 ﻿using AoCUtil;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace aoc2021
 {
     class Day_20 : BetterBaseDay
     {
-        private static void Print(Matrix<char> map)
-        {
-            StringBuilder sb = new();
-
-            for (int row = 0; row < map.Height; ++row)
-            {
-                Console.WriteLine(new string(map.GetRow(row)));
-                Console.WriteLine();
-            }
-
-            Console.WriteLine("wat");
-        }
-
         private static Matrix<char> Apply(Matrix<char> map, string conversion)
         {
             Matrix<char> ret = new(map.Width, map.Height, '.');

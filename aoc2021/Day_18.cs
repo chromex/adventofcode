@@ -212,7 +212,6 @@ namespace aoc2021
             {
                 current = new Node() { lNode = current, rNode = inputs[i] };
                 Reduce(current);
-                Console.WriteLine(current.Print());
             }
 
             return Magnitude(current).ToString();

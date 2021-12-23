@@ -59,7 +59,6 @@ namespace aoc2021
             for (int i = 0; i < 10; ++i)
             {
                 template = Sub(template, subs);
-                //Console.WriteLine(template);
             }
 
             var groups = template.GroupBy(c => c);
@@ -130,8 +129,6 @@ namespace aoc2021
             {
                 string p = template.Substring(i, 2);
                 Visit2(0, p[0], p[1], subs, counts, 40, countsCollection);
-
-                Console.Write('.');
             }
 
             ++counts[template.Last()];

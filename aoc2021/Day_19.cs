@@ -117,7 +117,6 @@ namespace aoc2021
                         Vec3 offset;
                         if (Overlap(left, right, out offset))
                         {
-                            Console.Write(".");
                             right.beacons = right.beacons.Select(p => p + offset).ToList();
                             right.beacons.ForEach(p => uniques.Add(p));
                             right.marked = true;
@@ -158,7 +157,6 @@ namespace aoc2021
                     {
                         if (FindOverlap(left, right, uniques))
                         {
-                            Console.WriteLine($"Overlap: {left.id} {right.id}");
                             break;
                         }
                     }
