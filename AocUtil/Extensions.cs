@@ -86,5 +86,13 @@ namespace AoCUtil
         public static void RotateLeft<T>(this T[] arr, int amount) => Util.LeftShiftArray(arr, amount);
         public static void RotateRight<T>(this T[] arr) => Util.RightShiftArray(arr, 1);
         public static void RotateRight<T>(this T[] arr, int amount) => Util.RightShiftArray(arr, amount);
+        
+        public static T[] Append<T>(this T[] array, T item)
+        {
+            List<T> list = new List<T>(array);
+            list.Add(item);
+
+            return list.ToArray();
+        }
     }
 }

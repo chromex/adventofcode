@@ -60,12 +60,48 @@ namespace aoc2021
             //return "no";
         }
 
+        private static int GetScore(int start, int[] rolls)
+        {
+
+        }
+
+        private static int SumWins(int[] rolls) => rolls.Select(r => Probs[r]).Sum();
+
+        private static int[] Rolls = new[] { 3, 4, 5, 6, 7, 8, 9 };
+        private static int[] Probs = new[] { 1, 3, 6, 7, 6, 3, 1 };
+
+        private static void Play(int p1, int p2, int[] p1rolls, int[] p2rolls, ref int p1wins, ref int p2wins)
+        {
+            if (GetScore(p1, p1rolls) >= 21)
+            {
+                p1wins += SumWins(p1rolls);
+                return;
+            }
+
+            if (GetScore(p2, p2rolls) >= 21)
+            {
+                p2wins += SumWins(p2rolls);
+                return;
+            }
+
+            foreach(int r1 in Rolls)
+            {
+                foreach (int r2 in Rolls)
+                {
+                    Play(p1, p2, p1rolls.Append(r1), p2rolls.Append(r2), ref p1wins, ref p2wins);
+                }
+            }
+        }
+
         public override string P2()
         {
             int p1 = 4, p2 = 8;
-            int p1s = 0, p2s = 0;
 
-            return "no";
+            int p1wins = 0, p2wins = 0;
+
+            Play(p1, p2, new int[] { }, new int[] { }, ref p1wins, ref p2wins);
+
+            return Math.Max(p1wins, p2wins).ToString();
         }
     }
 }
