@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace AoCUtil
 {
@@ -32,6 +31,9 @@ namespace AoCUtil
         public IntRange()
         { }
 
+        public IntRange(IntRange other) : this(other.Start, other.End)
+        { }
+
         public IntRange(int s, int e)
         {
             start = s;
@@ -40,9 +42,31 @@ namespace AoCUtil
             Debug.Assert(Start <= End);
         }
 
+        public IntRange(string min, string max) : this(min.AsInt(), max.AsInt())
+        { }
+
+        public IntRange(string[] vals) : this(vals[0], vals[1])
+        { }
+
+        public int Length => End - Start + 1;
+
+        public override string ToString() => $"({Start} <-> {End})";
+
         public bool Contains(int val)
         {
             return val >= Start && val <= End;
+        }
+
+        public bool Contains(IntRange other) => Start < other.Start && End > other.End;
+
+        public bool ContainsInclusive(IntRange other) => Start <= other.Start && End >= other.End;
+
+        public bool Overlap(IntRange other)
+        {
+            return Contains(other.Start) ||
+                Contains(other.End) ||
+                other.Contains(Start) ||
+                other.Contains(End);
         }
 
         public void Expand(int val)
@@ -53,7 +77,8 @@ namespace AoCUtil
 
         public IEnumerable<int> Range()
         {
-            return Enumerable.Range(Start, End - Start + 1);
+            for (int v = Start; v <= End; ++v)
+                yield return v;
         }
     }
 }
