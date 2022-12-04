@@ -40,9 +40,22 @@ namespace AoCUtil
             Debug.Assert(Start <= End);
         }
 
+        public IntRange(string s, string e) : this(int.Parse(s), int.Parse(e))
+        { }
+
         public bool Contains(int val)
         {
             return val >= Start && val <= End;
+        }
+
+        public bool Contains(IntRange other)
+        {
+            return Start <= other.Start && End >= other.End;
+        }
+
+        public bool Overlaps(IntRange other)
+        {
+            return Contains(other) || other.Contains(this) || (Start <= other.Start && End >= other.Start) || (Start <= other.End && End >= other.End);
         }
 
         public void Expand(int val)
