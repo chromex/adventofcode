@@ -1,6 +1,9 @@
 def Pairwise(fn, lstA, lstB):
     return list(fn(x, lstB[ind]) for ind,x in enumerate(lstA))
 
+def GetInts(str):
+    return list(map(lambda x: int(x), filter(lambda x: x != "", str.split(" "))))
+
 class DataMatrix:
     marks = None
 

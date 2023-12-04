@@ -49,4 +49,4 @@ def MarkNumbers(val, x, y):
 matrix.Scan(lambda x: x == "*", MarkNumbers)
 
 print(sum)
-print(matrix)
+#print(matrix)
