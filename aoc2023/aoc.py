@@ -116,3 +116,24 @@ class DataMatrix:
             return "." * self.__width
         else:
             return "".join(map(lambda item : "#" if item is True else ".", line))
+        
+class Range:
+    def __init__(self, start: int, length: int):
+        self.start = start
+        self.end = start + length
+
+    def __str__(self) -> str:
+        return f"({self.start}, {self.end})"
+    
+    @property
+    def length(self) -> int:
+        return self.end - self.start
+    
+    def ContainsValue(self, value: int) -> bool:
+        return value >= self.start and value < self.end
+    
+    def ContainsRange(self, other) -> bool:
+        return self.start <= other.start and other.end <= self.end
+    
+    def IntersectsRange(self, other) -> bool:
+        return self.ContainsValue(other.start) or other.ContainsValue(self.start)
