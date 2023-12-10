@@ -1,3 +1,5 @@
+import functools
+
 def Pairwise(fn, lstA, lstB):
     return list(fn(x, lstB[ind]) for ind,x in enumerate(lstA))
 
@@ -137,3 +139,47 @@ class Range:
     
     def IntersectsRange(self, other) -> bool:
         return self.ContainsValue(other.start) or other.ContainsValue(self.start)
+
+def IsPrime(x):
+    for i in range(2, x):
+        if (x % i) == 0:
+            return False
+    return True
+
+__primes = [2]
+__primesCheckMax = 2
+def GetPrimes(max: int, limitResults=True):
+    global __primes, __primesCheckMax
+
+    if __primesCheckMax < max:
+        for i in range(__primesCheckMax + 1, max + 1):
+            if IsPrime(i):
+                __primes.append(i)
+        __primesCheckMax = max 
+    
+    if limitResults:
+        for i in range(0, len(__primes)):
+            if __primes[i] > max:
+                return __primes[0:i]
+
+    return __primes
+
+def GetPrimeFactors(x: int):
+    result = []
+    for prime in GetPrimes(int(x / 2), False):
+        if x == prime:
+            result.append(prime)
+            break
+        elif x % prime == 0:
+            result.append(prime)
+            x /= prime
+    return result
+
+def LCM(nums):
+    for i in nums:
+        assert(type(i) == int)
+
+    factors = set()
+    for n in nums:
+        factors.update(GetPrimeFactors(n))
+    return functools.reduce(lambda x,y: x*y, factors)
