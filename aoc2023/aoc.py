@@ -1,10 +1,255 @@
 import functools
+import itertools
 
 def Pairwise(fn, lstA, lstB):
     return list(fn(x, lstB[ind]) for ind,x in enumerate(lstA))
 
-def GetInts(str):
-    return list(map(lambda x: int(x), filter(lambda x: x != "", str.split(" "))))
+def GetInts(str, spl=" "):
+    return list(map(lambda x: int(x), filter(lambda x: x != "", str.split(spl))))
+
+def GetNums(str, spl=" "):
+    return list(map(lambda x: float(x), filter(lambda x: x != "", str.split(spl))))
+
+def SplitEmptyLines(str):
+    res = []
+    cur = ""
+
+    for line in str.splitlines():
+        if line != "":
+            cur += line + "\n"
+        else:
+            res.append(cur)
+            cur = ""
+    
+    if cur != "":
+        res.append(cur)
+
+    return res
+
+class Vec2:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+class Mat3:
+    def __init__(self, data=None):
+        self._data = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+
+        if data != None:
+            rows = data.split(";")
+            assert(len(rows) == 3)
+            for i,r in enumerate(rows):
+                self._data[i] = GetNums(r)
+                assert(len(self._data[i]) == 3)
+    
+    def __str__(self):
+        res = []
+        for row in self._data:
+            res.append(f"[{row}]")
+        return "\n".join(res)
+    
+    def __getitem__(self, key):
+        return self._data[key[1]][key[0]]
+    
+    def __setitem__(self, key, value):
+        self._data[key[1]][key[0]] = value
+    
+    @staticmethod
+    def MkIdentity():
+        return Mat3("1 0 0;0 1 0;0 0 1")
+    
+    @staticmethod
+    def MkRotLeft90():
+        return Mat3("0 -1 0;1 0 0;0 0 1")
+    
+    @staticmethod
+    def MkRotRight90():
+        return Mat3("0 1 0;-1 0 0;0 0 1")
+    
+    @staticmethod
+    def MkTransform(x, y):
+        return Mat3(f"1 0 {x};0 1 {y};0 0 1")
+    
+    @staticmethod
+    def MulMat(left, right):
+        res = Mat3()
+        
+        res[0, 0] = left[0, 0] * right[0, 0] + left[1, 0] * right[0, 1] + left[2, 0] * right[0, 2]
+        res[1, 0] = left[0, 0] * right[1, 0] + left[1, 0] * right[1, 1] + left[2, 0] * right[1, 2]
+        res[2, 0] = left[0, 0] * right[2, 0] + left[1, 0] * right[2, 1] + left[2, 0] * right[2, 2]
+
+        res[0, 1] = left[0, 1] * right[0, 0] + left[1, 1] * right[0, 1] + left[2, 1] * right[0, 2]
+        res[1, 1] = left[0, 1] * right[1, 0] + left[1, 1] * right[1, 1] + left[2, 1] * right[1, 2]
+        res[2, 1] = left[0, 1] * right[2, 0] + left[1, 1] * right[2, 1] + left[2, 1] * right[2, 2]
+
+        res[0, 2] = left[0, 2] * right[0, 0] + left[1, 2] * right[0, 1] + left[2, 2] * right[0, 2]
+        res[1, 2] = left[0, 2] * right[1, 0] + left[1, 2] * right[1, 1] + left[2, 2] * right[1, 2]
+        res[2, 2] = left[0, 2] * right[2, 0] + left[1, 2] * right[2, 1] + left[2, 2] * right[2, 2]
+
+        return res
+    
+    @staticmethod
+    def MulVec(mat, vec):
+        assert(len(vec) == 2)
+        res = [0, 0, 0]
+        res[0] = mat[0, 0] * vec[0] + mat[1, 0] * vec[1] + mat[2, 0] * 1
+        res[1] = mat[0, 1] * vec[0] + mat[1, 1] * vec[1] + mat[2, 1] * 1
+        res[2] = mat[0, 2] * vec[0] + mat[1, 2] * vec[1] + mat[2, 2] * 1
+        return res[0:2]
+
+class StackPrint:
+    depth = 0
+    enabled = True
+
+    def __init__(self, tabWidth=4):
+        self.tab = " " * tabWidth
+
+    def Push(self):
+        self.depth += 1
+
+    def Pop(self):
+        self.depth = max(self.depth - 1, 0)
+
+    def Print(self, msg):
+        if self.enabled:
+            print(f"{self.tab * self.depth}{msg}")
+
+class DM2:
+    class _DataMatrixStore:
+        def __init__(self, data: str):
+            self.raw = data
+            
+            lines = data.splitlines()
+            self.__width = len(lines[0])
+            self.__height = len(lines)
+
+            self.data = [""] * self.__width * self.__height
+
+            for y in range(self.__height):
+                for x in range(self.__width):
+                    self.data[self.__GetIndex(x, y)] = lines[y][x]
+
+        def __GetIndex(self, x, y): return (y * self.__width) + x
+
+        def __DecomposeIndex(self, index): return (index % self.__width, int(index / self.__width))
+
+        @property
+        def Height(self): return self.__height
+
+        @property
+        def Width(self): return self.__width
+
+        def __getitem__(self, key): 
+            return self.data[self.__GetIndex(key[0], key[1])]
+        
+        def __setitem__(self, key, value):
+            self.data[self.__GetIndex(key[0], key[1])] = value
+
+        def CoordIter(self):
+            """Use is 'for y,x in mat.CoordIter():"""
+            return itertools.product(range(self.Height, self.Width))
+
+        def __str__(self):
+            output = []
+
+            for y in range(self.Height):
+                output.append("")
+                for x in range(self.Width):
+                    output[-1] += self.__getitem__((x, y))
+
+            return "\n".join(output)
+        
+    __flipDims = False
+
+    def __init__(self, data: str):
+        self.__store = DM2._DataMatrixStore(data)
+
+    def __getitem__(self, key):
+        x, y = key[0], key[1]
+        # TODO: transform index
+        return self.__store[x, y]
+
+    def __setitem__(self, key, value):
+        x, y = key[0], key[1]
+        # TODO: transform index
+        self.__store[x, y] = value
+    
+    @property
+    def Width(self):
+        if not self.__flipDims: 
+            return self.__store.Width
+        else:
+            return self.__store.Height
+    
+    @property
+    def Height(self):
+        if not self.__flipDims: 
+            return self.__store.Height
+        else:
+            return self.__store.Width
+    
+    def __str__(self):
+        output = []
+
+        for y in range(self.Height):
+            output.append("")
+            for x in range(self.Width):
+                output[-1] += self[x, y]
+
+        return "\n".join(output)
+    
+    def IsValidIndex(self, x: int, y: int):
+        return x >= 0 and y >= 0 and x < self.Width and y < self.Height
+    
+    def RotateRight(self):
+        # TODO
+        self.__flipDims = not self.__flipDims
+        pass
+
+    def RotateLeft(self):
+        # TODO
+        self.__flipDims = not self.__flipDims
+        pass
+
+    def FlipVertical(self):
+        # TODO
+        pass
+
+    def FlipHorizontal(self):
+        # TODO
+        pass
+
+    def GetColumn(self, x: int):
+        # TODO
+        pass
+
+    def GetRow(self, y: int):
+        # TODO
+        pass
+
+if __name__ == "__main__":
+    input = """O....#....
+O.OO#....#
+.....##...
+OO.#O.F..O
+.O.....O#.
+O.#..O.#.#
+..O..#O..O
+.......O..
+#....###..
+#OO..#...."""
+    dm = DM2(input)
+    print(dm)
+    print(dm[6, 3])
+    dm[6,3] = "C"
+    print(dm)    
+
+    mat = Mat3.MkTransform(-1.5, -1.5)
+    rot = Mat3.MkRotLeft90()
+    mat = Mat3.MulMat(rot, mat)
+    mat = Mat3.MulMat(Mat3.MkTransform(1.5, 1.5), mat)
+    print(rot)
+    print(Mat3.MulVec(mat, [3, 1]))
 
 class DataMatrix:
     marks = None
@@ -27,6 +272,19 @@ class DataMatrix:
         if type(key) is tuple:
             return self.lines[key[1]][key[0]]
         
+    def Set(self, x, y, val):
+        assert(len(val) == 1)
+        line = self.lines[y]
+        left = line[0:x]
+        right = line[x+1:]
+        self.lines[y] = left + val + right
+        
+    def GetColumn(self, x):
+        res = ""
+        for i in range(self.Height):
+            res += self.lines[i][x]
+        return res
+
     def __str__(self) -> str:
         output = []
 
