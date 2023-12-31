@@ -1,5 +1,6 @@
 import functools
 import itertools
+import math
 
 def Pairwise(fn, lstA, lstB):
     return list(fn(x, lstB[ind]) for ind,x in enumerate(lstA))
@@ -26,21 +27,17 @@ def SplitEmptyLines(str):
 
     return res
 
-class Vec2:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
 class Mat3:
     def __init__(self, data=None):
-        self._data = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
-
         if data != None:
+            self._data = []
             rows = data.split(";")
             assert(len(rows) == 3)
-            for i,r in enumerate(rows):
-                self._data[i] = GetNums(r)
-                assert(len(self._data[i]) == 3)
+            for r in rows:
+                self._data.append(GetNums(r))
+                assert(len(self._data[-1]) == 3)
+        else:
+            self._data = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
     
     def __str__(self):
         res = []
@@ -97,6 +94,30 @@ class Mat3:
         res[2] = mat[0, 2] * vec[0] + mat[1, 2] * vec[1] + mat[2, 2] * 1
         return res[0:2]
 
+class Direction:
+    UP = NORTH = 0
+    RIGHT = EAST = 1
+    DOWN = SOUTH =  2
+    LEFT = WEST = 3
+
+    @staticmethod
+    def TurnLeft(dir):
+        assert(dir >= 0 and dir < 4)
+        return ((dir - 1) + 4) % 4
+    
+    @staticmethod
+    def TurnRight(dir):
+        assert(dir >= 0 and dir < 4)
+        return (dir + 1) % 4
+    
+    @staticmethod
+    def MovePos(x, y, dir):
+        assert(dir >= 0 and dir < 4)
+        if dir == Direction.UP: return (x, y - 1)
+        elif dir == Direction.RIGHT: return (x + 1, y)
+        elif dir == Direction.DOWN: return (x, y + 1)
+        else: return (x - 1, y)
+
 class StackPrint:
     depth = 0
     enabled = True
@@ -114,79 +135,104 @@ class StackPrint:
         if self.enabled:
             print(f"{self.tab * self.depth}{msg}")
 
+class _DataMatrixStore:
+    def __init__(self, data: str, convert=None):
+        self.raw = data
+        
+        lines = data.splitlines()
+        self.__width = len(lines[0])
+        self.__height = len(lines)
+
+        self.data = []
+
+        if convert == None:
+            convert = lambda x: x
+
+        for y in range(self.__height):
+            for x in range(self.__width):
+                self.data.append(convert(lines[y][x]))
+
+    def __GetIndex(self, x, y): return (y * self.__width) + x
+
+    def __DecomposeIndex(self, index): return (index % self.__width, int(index / self.__width))
+
+    @property
+    def Height(self): return self.__height
+
+    @property
+    def Width(self): return self.__width
+
+    def __getitem__(self, key): 
+        return self.data[self.__GetIndex(key[0], key[1])]
+    
+    def __setitem__(self, key, value):
+        self.data[self.__GetIndex(key[0], key[1])] = value
+
+    def __str__(self):
+        output = []
+
+        for y in range(self.Height):
+            output.append("")
+            for x in range(self.Width):
+                output[-1] += self.__getitem__((x, y))
+
+        return "\n".join(output)
+    
 class DM2:
-    class _DataMatrixStore:
-        def __init__(self, data: str):
-            self.raw = data
-            
-            lines = data.splitlines()
-            self.__width = len(lines[0])
-            self.__height = len(lines)
+    _flipDims = False
+    _indexMod = None
 
-            self.data = [""] * self.__width * self.__height
+    def __init__(self, data: str, convert=None):
+        self._store = _DataMatrixStore(data, convert)
 
-            for y in range(self.__height):
-                for x in range(self.__width):
-                    self.data[self.__GetIndex(x, y)] = lines[y][x]
+        xOffset = self._store.Width / 2
+        yOffset = self._store.Height / 2
 
-        def __GetIndex(self, x, y): return (y * self.__width) + x
+        if self._store.Width % 2 == 0:
+            xOffset -= 0.5
+        if self._store.Height % 2 == 0:
+            yOffset -= 0.5
 
-        def __DecomposeIndex(self, index): return (index % self.__width, int(index / self.__width))
+        moveDown = Mat3.MkTransform(-xOffset, -yOffset)
+        moveBack = Mat3.MkTransform(xOffset, yOffset)
+        self._rotRight = Mat3.MulMat(Mat3.MulMat(moveBack, Mat3.MkRotRight90()), moveDown)
+        self._rotLeft = Mat3.MulMat(Mat3.MulMat(moveBack, Mat3.MkRotLeft90()), moveDown)
 
-        @property
-        def Height(self): return self.__height
+    def _AdjustIndex(self, x, y):
+        rx = x
+        ry = y
 
-        @property
-        def Width(self): return self.__width
+        if (self._indexMod != None):
+            rx, ry = Mat3.MulVec(self._indexMod, [x,  y])
+            rx = int(rx + 0.1)
+            ry = int(ry + 0.1)
 
-        def __getitem__(self, key): 
-            return self.data[self.__GetIndex(key[0], key[1])]
-        
-        def __setitem__(self, key, value):
-            self.data[self.__GetIndex(key[0], key[1])] = value
-
-        def CoordIter(self):
-            """Use is 'for y,x in mat.CoordIter():"""
-            return itertools.product(range(self.Height, self.Width))
-
-        def __str__(self):
-            output = []
-
-            for y in range(self.Height):
-                output.append("")
-                for x in range(self.Width):
-                    output[-1] += self.__getitem__((x, y))
-
-            return "\n".join(output)
-        
-    __flipDims = False
-
-    def __init__(self, data: str):
-        self.__store = DM2._DataMatrixStore(data)
+        return (rx, ry)
 
     def __getitem__(self, key):
-        x, y = key[0], key[1]
-        # TODO: transform index
-        return self.__store[x, y]
+        x, y = self._AdjustIndex(key[0], key[1])
+        return self._store[x, y]
 
     def __setitem__(self, key, value):
-        x, y = key[0], key[1]
-        # TODO: transform index
-        self.__store[x, y] = value
+        x, y = self._AdjustIndex(key[0], key[1])
+        self._store[x, y] = value
+
+    def IterateAll(self):
+        return itertools.product(range(self.Height), range(self.Width))
     
     @property
     def Width(self):
-        if not self.__flipDims: 
-            return self.__store.Width
+        if not self._flipDims: 
+            return self._store.Width
         else:
-            return self.__store.Height
+            return self._store.Height
     
     @property
     def Height(self):
-        if not self.__flipDims: 
-            return self.__store.Height
+        if not self._flipDims: 
+            return self._store.Height
         else:
-            return self.__store.Width
+            return self._store.Width
     
     def __str__(self):
         output = []
@@ -194,7 +240,7 @@ class DM2:
         for y in range(self.Height):
             output.append("")
             for x in range(self.Width):
-                output[-1] += self[x, y]
+                output[-1] += self[x, y].__str__()
 
         return "\n".join(output)
     
@@ -202,14 +248,20 @@ class DM2:
         return x >= 0 and y >= 0 and x < self.Width and y < self.Height
     
     def RotateRight(self):
-        # TODO
-        self.__flipDims = not self.__flipDims
-        pass
+        self._flipDims = not self._flipDims
+
+        if self._indexMod == None:
+            self._indexMod = self._rotRight
+        else:
+            self._indexMod = Mat3.MulMat(self._indexMod, self._rotRight)
 
     def RotateLeft(self):
-        # TODO
-        self.__flipDims = not self.__flipDims
-        pass
+        self._flipDims = not self._flipDims
+
+        if self._indexMod == None:
+            self._indexMod = self._rotLeft
+        else:
+            self._indexMod = Mat3.MulMat(self._indexMod, self._rotLeft)
 
     def FlipVertical(self):
         # TODO
@@ -226,30 +278,6 @@ class DM2:
     def GetRow(self, y: int):
         # TODO
         pass
-
-if __name__ == "__main__":
-    input = """O....#....
-O.OO#....#
-.....##...
-OO.#O.F..O
-.O.....O#.
-O.#..O.#.#
-..O..#O..O
-.......O..
-#....###..
-#OO..#...."""
-    dm = DM2(input)
-    print(dm)
-    print(dm[6, 3])
-    dm[6,3] = "C"
-    print(dm)    
-
-    mat = Mat3.MkTransform(-1.5, -1.5)
-    rot = Mat3.MkRotLeft90()
-    mat = Mat3.MulMat(rot, mat)
-    mat = Mat3.MulMat(Mat3.MkTransform(1.5, 1.5), mat)
-    print(rot)
-    print(Mat3.MulVec(mat, [3, 1]))
 
 class DataMatrix:
     marks = None
@@ -350,6 +378,16 @@ class DataMatrix:
 
         self.marks[y][x] = True
 
+    def SumMarks(self):
+        res = 0
+        if self.marks != None:
+            for y in range(self.Height):
+                if self.marks[y] != None:
+                    for x in range(self.Width):
+                        if self.IsMarked(x, y):
+                            res += 1
+        return res
+
     def ClearMark(self, x:int, y:int):
         if self.marks != None and self.marks[y] != None:
             self.marks[y][x] = False
@@ -383,7 +421,7 @@ class Range:
         self.end = start + length
 
     def __str__(self) -> str:
-        return f"({self.start}, {self.end})"
+        return f"[{self.start}, {self.end})"
     
     @property
     def length(self) -> int:
@@ -397,6 +435,140 @@ class Range:
     
     def IntersectsRange(self, other) -> bool:
         return self.ContainsValue(other.start) or other.ContainsValue(self.start)
+
+class SortedLinkedList:
+    _root = None
+    _len = 0
+
+    class _Node:
+        def __init__(self, val, prev=None, next=None):
+            self.value = val
+            self.prev = prev
+            self.next = next
+
+    def __init__(self, Compare):
+        self._compare = Compare
+
+    def __str__(self):
+        ret = []
+        
+        cur = self._root
+        while cur != None:
+            ret.append(f"{cur.value}")
+            cur = cur.next
+
+        return "<" + ", ".join(ret) + ">"
+    
+    @property
+    def Length(self): return self._len
+
+    def Add(self, item):
+        if self._root == None:
+            self._root = SortedLinkedList._Node(item)
+            self._len += 1
+            return
+
+        cur = self._root
+        while cur != None:
+            cmp = self._compare(item, cur.value)
+            if cmp < 0:
+                newNode = SortedLinkedList._Node(item, cur.prev, cur)
+                cur.prev = newNode
+
+                if newNode.prev == None:
+                    self._root = newNode
+                else:
+                    newNode.prev.next = newNode
+
+                break
+
+            if cur.next != None:
+                cur = cur.next
+            else:
+                cur.next = SortedLinkedList._Node(item, cur, None)
+                break
+        
+        self._len += 1
+
+    def Remove(self, item):
+        cur = self._root
+
+        while cur != None:
+            if cur.value != item:
+                cur = cur.next
+                continue
+            
+            if cur.prev != None:
+                cur.prev.next = cur.next
+            else:
+                self._root = cur.next
+
+            if cur.next != None:
+                cur.next.prev = cur.prev
+
+            self._len -= 1
+
+            return
+        
+        raise Exception("No matching value found")
+    
+    def PopFront(self):
+        if self._root == None:
+            return None
+        
+        res = self._root.value
+        self.Remove(res)
+        return res
+    
+    def IsEmpty(self):
+        return self._root == None
+
+    class _SLLIter:
+        def __init__(self, node):
+            self._cur = node
+
+        def __next__(self):
+            if self._cur != None:
+                ret = self._cur.value
+                self._cur = self._cur.next
+                return ret
+            else:
+                raise StopIteration
+
+    def __iter__(self):
+        return SortedLinkedList._SLLIter(self._root)
+
+if __name__ == "__main__":
+    lst = SortedLinkedList(lambda x, y: x - y)
+    print(lst)
+    lst.Add(5)
+    print(lst)
+    lst.Add(2)
+    print(lst)
+    lst.Add(3)
+    print(lst)
+    lst.Add(2)
+    print(lst)
+    lst.Add(8)
+    print(lst)
+    lst.Add(1)
+    print(lst)
+    lst.Remove(3)
+    print(lst)
+    lst.Remove(2)
+    print(lst)
+    lst.Remove(8)
+    print(lst)
+    lst.Add(9)
+    lst.Add(7)
+    print(lst)
+    lst.Remove(1)
+    print(lst)
+    lst.Remove(2)
+    print(lst)
+    lst.Remove(5)
+    print(lst)
+    #lst.Remove(18)
 
 def IsPrime(x):
     for i in range(2, x):
