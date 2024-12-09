@@ -300,6 +300,7 @@ class DataMatrix:
         if type(key) is tuple:
             return self.lines[key[1]][key[0]]
         
+    # This is dumb. I assume hard eggnog was involved.
     def Set(self, x, y, val):
         assert(len(val) == 1)
         line = self.lines[y]
@@ -375,6 +376,9 @@ class DataMatrix:
         return result
         
     def Mark(self, x:int, y:int):
+        if (not self.IndexInBounds(x, y)):
+            return False
+
         if self.marks == None:
             self.marks = [None] * self.__height
 
@@ -382,6 +386,7 @@ class DataMatrix:
             self.marks[y] = [None] * self.__width
 
         self.marks[y][x] = True
+        return True
 
     def SumMarks(self):
         res = 0
@@ -440,6 +445,72 @@ class Range:
     
     def IntersectsRange(self, other) -> bool:
         return self.ContainsValue(other.start) or other.ContainsValue(self.start)
+
+class IVec2:
+    def __init__(self, x: int, y :int):
+        self._x = x
+        self._y = y
+
+    def __init__(self, other):
+        self._x = other[0]
+        self._y = other[1]
+
+    def __str__(self):
+        return f"<{self._x}, {self._y}>"
+
+    def __getitem__(self, key):
+        if key == 0:
+            return self._x
+        elif key == 1:
+            return self._y
+        
+        return None
+
+    @property
+    def X(self) -> int:
+        return self._x
+
+    @property
+    def Y(self) -> int:
+        return self._y
+    
+    @staticmethod
+    def Add(first, second):
+        return IVec2(first.X + second.X, first.Y + second.Y)
+
+    @staticmethod
+    def Sub(first, second):
+        return IVec2(first.X - second.X, first.Y - second.Y)
+
+    @staticmethod
+    def Mul(first, second):
+        return IVec2(first.X * second.X, first.Y * second.Y)
+    
+    def RotateRight(self, pivot=None):
+        if (pivot != None):
+            self._x -= pivot._x
+            self._y -= pivot._y
+
+        tmp = self._x
+        self._x = self._y
+        self._y = -tmp
+
+        if (pivot != None):
+            self._x += pivot._x
+            self._y += pivot._y
+
+    def RotateLeft(self, pivot=None):
+        if (pivot != None):
+            self._x -= pivot._x
+            self._y -= pivot._y
+
+        tmp = self._x
+        self._x = -self._y
+        self._y = tmp
+
+        if (pivot != None):
+            self._x += pivot._x
+            self._y += pivot._y
 
 class SortedLinkedList:
     _root = None
@@ -544,36 +615,18 @@ class SortedLinkedList:
         return SortedLinkedList._SLLIter(self._root)
 
 if __name__ == "__main__":
-    lst = SortedLinkedList(lambda x, y: x - y)
-    print(lst)
-    lst.Add(5)
-    print(lst)
-    lst.Add(2)
-    print(lst)
-    lst.Add(3)
-    print(lst)
-    lst.Add(2)
-    print(lst)
-    lst.Add(8)
-    print(lst)
-    lst.Add(1)
-    print(lst)
-    lst.Remove(3)
-    print(lst)
-    lst.Remove(2)
-    print(lst)
-    lst.Remove(8)
-    print(lst)
-    lst.Add(9)
-    lst.Add(7)
-    print(lst)
-    lst.Remove(1)
-    print(lst)
-    lst.Remove(2)
-    print(lst)
-    lst.Remove(5)
-    print(lst)
-    #lst.Remove(18)
+    vec = IVec2(1, 3)
+    print(vec)
+    vec.RotateRight()
+    print(vec)
+    vec.RotateLeft()
+    print(vec)
+    vec = IVec2.Add(vec, IVec2(-7, 15))
+    print(vec)
+    vec = IVec2(3,3)
+    print(vec)
+    vec.RotateRight(IVec2(1,1))
+    print(vec)
 
 def IsPrime(x):
     for i in range(2, x):
