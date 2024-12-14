@@ -16,10 +16,10 @@ def GetNums(str, spl=" "):
 CLASS_STORE = {}
 def ParseInputLine(name, desc, str):
     lst = re.findall(r'-?\d+', str)
-    fields = desc.split(" ")
-    assert(len(lst) == len(fields))
 
     if not name in CLASS_STORE:
+        fields = desc.split(" ")
+        assert(len(lst) == len(fields))
         CLASS_STORE[name] = dataclasses.make_dataclass(name, fields)
     
     return CLASS_STORE[name](*map(lambda x: int(x), lst))
