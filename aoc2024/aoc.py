@@ -335,21 +335,22 @@ class DataMatrix:
         return x >= 0 and y >= 0 and x < self.Width and y < self.Height
     
     def Spread(self, x, y, callback):
-        width = self.Width
+        width = self.Width - 1
+        height = self.Height - 1
         if y > 0:
             if x > 0:
                 callback(x - 1, y - 1)
-            callback(x    , y - 1)
+            callback(x, y - 1)
             if x < width:
                 callback(x + 1, y - 1)
         if x > 0:
             callback(x - 1, y)
         if x < width:
             callback(x + 1, y)
-        if y < self.Height:
+        if y < height:
             if x > 0:
                 callback(x - 1, y + 1)
-            callback(x    , y + 1)
+            callback(x, y + 1)
             if x < width:
                 callback(x + 1, y + 1)
 
