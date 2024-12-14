@@ -1280,86 +1280,22 @@ Button A: X+89, Y+38
 Button B: X+39, Y+84
 Prize: X=9885, Y=10686""".splitlines()
 
-class Machine:
-    def __init__(self, ax, ay, bx, by, px, py):
-        self.ax = ax
-        self.ay = ay
-        self.bx = bx
-        self.by = by
-        self.px = px
-        self.py = py
-
-    def __str__(self):
-        return f"{self.ax} {self.ay} {self.bx} {self.by} {self.px} {self.py}"
-
 machines = []
 for i in range(int(len(lines) / 4) + 1):
-    ax = int(lines[i*4][12:14])
-    ay = int(lines[i*4][18:20])
-    bx = int(lines[i*4 + 1][12:14])
-    by = int(lines[i*4 + 1][18:20])
-    spl = lines[i*4 + 2].split(" ")
-    px = int(spl[1][2:-1]) + 10000000000000
-    py = int(spl[2][2:])   + 10000000000000
-    machines.append(Machine(ax, ay, bx, by, px, py))
+    mach = aoc.ParseInputLine("Machine", "ax ay bx by px py", "".join(lines[i*4:i*4+3]))
+    mach.px += 10000000000000
+    mach.py += 10000000000000
+    machines.append(mach)
 
-for mach in machines:
-    print(mach)
-
-# a*94 + b * 22 = 8400, a*34+b*67 = 5400
-
-def SolveB(i, a, b, p):
-    res = (p - i * a) / b
-    return res
-
-def Root(mach, i0, i1):
-    #print(f"root {i0} {i1}")
-    for a in range(int(i0) - 100, int(i1) + 100):
-        bx = SolveB(a, mach.ax, mach.bx, mach.px)
-        by = SolveB(a, mach.ay, mach.by, mach.py)
-        #print(f"tesst {a} {bx} {by}")
-        if bx == by and bx % 1 == 0:
-            return (a, int(bx))
-    return (-1, -1)
-
-step = 1000000
 sum = 0
 for mach in machines:
-    btnAx = mach.px / mach.ax
-    btnBx = mach.px / mach.bx
-
-    btnAy = mach.py / mach.ay
-    btnBy = mach.py / mach.by
-
-    i = 0
-    maxA = max(mach.px / mach.ax, mach.py / mach.ay)
-    print(maxA)
-    first = True
-    less = False
-    while i < maxA:
-        bx = SolveB(i, mach.ax, mach.bx, mach.px)
-        by = SolveB(i, mach.ay, mach.by, mach.py)
-        if first:
-            first = False
-            less = bx < by
-        else:
-            if less and (bx > by):
-                print(f"detected cross: {bx} {by}")
-                a, b = Root(mach, i - step, i)
-                print(f"{a} {b}")
-                if a >= 0:
-                    sum += a * 3 + b
-                    print("good")
-                break
-            elif not less and (bx < by):
-                print(f"detected cross: {bx} {by}")
-                a, b = Root(mach, i - step, i)
-                print(f"{a} {b}")
-                if a >= 0:
-                    sum += a * 3 + b
-                    print("good")
-                break
-        i += step
-        
+    L1 = aoc.Line(mach.ax, mach.bx, mach.px)
+    L2 = aoc.Line(mach.ay, mach.by, mach.py)
+    res = L1.Intersect(L2)
+    if res:
+        print(f"Intersect {res}")
+        if res[0] % 1 == 0 and res[1] % 1 == 0:
+            print("Good")
+            sum += int(res[0]) * 3 + int(res[1])        
 
 print(sum)

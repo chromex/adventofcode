@@ -501,27 +501,20 @@ p=48,10 v=36,-73
 p=78,57 v=-87,54
 p=50,40 v=-70,-74""".splitlines()
 
-robots = []
-
-for line in inputlines:
-    spl = line.split(" ")
-    pos = aoc.GetInts(spl[0][2:], ",")
-    vel = aoc.GetInts(spl[1][2:], ",")
-    robots.append((pos, vel))
+robots = aoc.ParseInputLines("Robot", "x y vx vy", inputlines)
 
 WIDTH = 101
 HEIGHT = 103
 
-map = aoc.DataMatrix(f"{"." * WIDTH}\n" * HEIGHT)
-
+map = aoc.DataMatrix.MakeFromDims(WIDTH, HEIGHT)
 
 def Iter(i):
     global robots
     map.ResetMarks()
     for robot in robots:
-        robot[0][0] = (robot[0][0] + robot[1][0]) % WIDTH
-        robot[0][1] = (robot[0][1] + robot[1][1]) % HEIGHT
-        map.Mark(robot[0][0], robot[0][1])
+        robot.x = (robot.x + robot.vx) % WIDTH
+        robot.y = (robot.y + robot.vy) % HEIGHT
+        map.Mark(robot.x, robot.y)
     
     printout = False
     for y in range(HEIGHT):
@@ -531,7 +524,7 @@ def Iter(i):
                 run += 1
             else:
                 run = 0
-            if run >= 6:
+            if run >= 12:
                 printout = True
                 break
         if printout:

@@ -1,6 +1,8 @@
 import functools
 import itertools
 import math
+import re
+import dataclasses
 
 def Pairwise(fn, lstA, lstB):
     return list(fn(x, lstB[ind]) for ind,x in enumerate(lstA))
@@ -10,6 +12,23 @@ def GetInts(str, spl=" "):
 
 def GetNums(str, spl=" "):
     return list(map(lambda x: float(x), filter(lambda x: x != "", str.split(spl))))
+
+CLASS_STORE = {}
+def ParseInputLine(name, desc, str):
+    lst = re.findall(r'-?\d+', str)
+    fields = desc.split(" ")
+    assert(len(lst) == len(fields))
+
+    if not name in CLASS_STORE:
+        CLASS_STORE[name] = dataclasses.make_dataclass(name, fields)
+    
+    return CLASS_STORE[name](*map(lambda x: int(x), lst))
+
+def ParseInputLines(name, desc, lines):
+    res = []
+    for line in lines:
+        res.append(ParseInputLine(name, desc, line))
+    return res
 
 def SplitEmptyLines(str):
     res = []
@@ -287,6 +306,10 @@ class DataMatrix:
         self.lines = data.splitlines()
         self.__height = len(self.lines)
         self.__width = len(self.lines[0])
+
+    @staticmethod
+    def MakeFromDims(wid, height):
+        return DataMatrix(f"{"." * wid}\n" * height)
 
     def __getitem__(self, key):
         """
@@ -615,19 +638,39 @@ class SortedLinkedList:
     def __iter__(self):
         return SortedLinkedList._SLLIter(self._root)
 
+@dataclasses.dataclass
+class Line:
+    a: float
+    b: float
+    c: float
+
+    @staticmethod
+    def MakeFromPoints(ax, ay, bx, by):
+        a = ay - by
+        b = bx - ax
+        c = ax * by - bx * ay
+        return Line(a, b, -c)
+
+    def Intersect(self, other, onlySegment = False):
+        """Computes the intersection of two lines."""
+        D = self.a * other.b - self.b * other.a
+        if D != 0:
+            Dx = self.c * other.b - self.b * other.c
+            Dy = self.a * other.c - self.c * other.a
+            x = Dx / D
+            y = Dy / D
+            return (x, y)
+        return False
+
 if __name__ == "__main__":
-    vec = IVec2(1, 3)
-    print(vec)
-    vec.RotateRight()
-    print(vec)
-    vec.RotateLeft()
-    print(vec)
-    vec = IVec2.Add(vec, IVec2(-7, 15))
-    print(vec)
-    vec = IVec2(3,3)
-    print(vec)
-    vec.RotateRight(IVec2(1,1))
-    print(vec)
+    L1 = Line.MakeFromPoints(0,1, 2,3)
+    L2 = Line.MakeFromPoints(2,3, 0,4)
+
+    R = L1.Intersect(L2)
+    if R:
+        print("Intersection detected:", R)
+    else:
+        print("No single intersection point detected")
 
 def IsPrime(x):
     for i in range(2, x):

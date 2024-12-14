@@ -1,0 +1,3 @@
+import aoc
+
+input = """"""
