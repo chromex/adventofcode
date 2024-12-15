@@ -131,7 +131,7 @@ input = """.........#...........................................................
 .......#.......#.....#...............#.#.....#.............#........................#..............................#..#.........#.
 ........................#........................................#.............................##................................."""
 
-map = aoc.DataMatrix(input)
+map = aoc.DM2(input)
 
 sdir = aoc.Direction.UP
 sx = 0
@@ -140,7 +140,7 @@ def SetPos(_, _x, _y):
     global sx, sy
     sx = _x
     sy = _y
-map.Scan(lambda x: x == "^", SetPos)
+map.Filter(lambda x: x == "^", SetPos)
 
 def Travel(map):
     x = sx
@@ -182,6 +182,6 @@ def Test(x, y):
     if Travel(cpy):
         sum += 1
 
-map.Visit(Test)
+map.VisitAll(Test)
 
 print(sum)

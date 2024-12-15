@@ -10,11 +10,15 @@ def Pairwise(fn, lstA, lstB):
 def GetInts(str, spl=" "):
     return list(map(lambda x: int(x), filter(lambda x: x != "", str.split(spl))))
 
-def GetNums(str, spl=" "):
+def GetFloats(str, spl=" "):
     return list(map(lambda x: float(x), filter(lambda x: x != "", str.split(spl))))
 
 CLASS_STORE = {}
 def ParseInputLine(name, desc, str):
+    """Parses the ints in str into a class described by name and desc.
+    
+    @param name: String name of the class. Nothing special.
+    @param desc: String containing the class field names separated by empty spaces."""
     lst = re.findall(r'-?\d+', str)
 
     if not name in CLASS_STORE:
@@ -25,6 +29,7 @@ def ParseInputLine(name, desc, str):
     return CLASS_STORE[name](*map(lambda x: int(x), lst))
 
 def ParseInputLines(name, desc, lines):
+    """Parses each line in lines as defined by ParseInputLine"""
     res = []
     for line in lines:
         res.append(ParseInputLine(name, desc, line))
@@ -53,7 +58,7 @@ class Mat3:
             rows = data.split(";")
             assert(len(rows) == 3)
             for r in rows:
-                self._data.append(GetNums(r))
+                self._data.append(GetFloats(r))
                 assert(len(self._data[-1]) == 3)
         else:
             self._data = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
@@ -182,7 +187,9 @@ class _DataMatrixStore:
     def Width(self): return self.__width
 
     def __getitem__(self, key): 
-        return self.data[self.__GetIndex(key[0], key[1])]
+        idx = self.__GetIndex(key[0], key[1])
+        assert(idx >= 0 and idx < len(self.data))
+        return self.data[idx]
     
     def __setitem__(self, key, value):
         self.data[self.__GetIndex(key[0], key[1])] = value
@@ -197,36 +204,55 @@ class _DataMatrixStore:
 
         return "\n".join(output)
     
+# To replace OG DataMatrix:
+# - Marks
 class DM2:
-    _flipDims = False
-    _indexMod = None
+    """The ultimate data matrix. Support for fast updates, rotations, flips, the works."""
+    
+    _rot = Direction.UP
+    _flipHorz = False
+    _flipVert = False
+    _marks = None
 
     def __init__(self, data: str, convert=None):
         self._store = _DataMatrixStore(data, convert)
 
-        xOffset = self._store.Width / 2
-        yOffset = self._store.Height / 2
-
-        if self._store.Width % 2 == 0:
-            xOffset -= 0.5
-        if self._store.Height % 2 == 0:
-            yOffset -= 0.5
-
-        moveDown = Mat3.MkTransform(-xOffset, -yOffset)
-        moveBack = Mat3.MkTransform(xOffset, yOffset)
-        self._rotRight = Mat3.MulMat(Mat3.MulMat(moveBack, Mat3.MkRotRight90()), moveDown)
-        self._rotLeft = Mat3.MulMat(Mat3.MulMat(moveBack, Mat3.MkRotLeft90()), moveDown)
+    @staticmethod
+    def MakeFromDims(width, height):
+        return DM2(f"{"." * width}\n" * height)
 
     def _AdjustIndex(self, x, y):
-        rx = x
-        ry = y
+        ret = IVec2(x, y)
 
-        if (self._indexMod != None):
-            rx, ry = Mat3.MulVec(self._indexMod, [x,  y])
-            rx = int(rx + 0.1)
-            ry = int(ry + 0.1)
+        fh = self._flipHorz
+        fv = self._flipVert
 
-        return (rx, ry)
+        if self._CheckSwapDims():
+            tmp = fh
+            fh = fv
+            fv = tmp
+
+        if fh:
+            ret.X = self.Width - ret.X - 1
+
+        if fv:
+            ret.Y = self.Height - ret.Y - 1
+
+        if (self._rot != Direction.UP):
+            ret = IVec2.Sub(ret, self._GetOrigin())
+
+            match self._rot:
+                case Direction.RIGHT:
+                    ret.RotateRight()
+                case Direction.DOWN:
+                    ret.RotateRight()
+                    ret.RotateRight()
+                case Direction.LEFT:
+                    ret.RotateRight()
+                    ret.RotateRight()
+                    ret.RotateRight()
+
+        return (ret.X, ret.Y)
 
     def __getitem__(self, key):
         x, y = self._AdjustIndex(key[0], key[1])
@@ -236,67 +262,198 @@ class DM2:
         x, y = self._AdjustIndex(key[0], key[1])
         self._store[x, y] = value
 
-    def IterateAll(self):
-        return itertools.product(range(self.Height), range(self.Width))
+    def _GetOrigin(self):
+        match self._rot:
+            case Direction.UP:
+                return IVec2(0, 0)
+            case Direction.RIGHT:
+                return IVec2(self._store.Height - 1, 0)
+            case Direction.DOWN:
+                return IVec2(self._store.Width - 1, self._store.Height - 1)
+            case Direction.LEFT:
+                return IVec2(0, self._store.Width - 1)
+            
+        assert(False)
+
+    def _CheckSwapDims(self):
+        return (self._rot == Direction.RIGHT or self._rot == Direction.LEFT)
+    
+    def __str__(self):
+        output = []
+
+        output.append(f"Dims: {self.Width}x{self.Height}")
+        for y in range(self.Height):
+            output.append("")
+            for x in range(self.Width):
+                output[-1] += self[x, y].__str__()
+        output.append("")
+
+        return "\n".join(output)
     
     @property
     def Width(self):
-        if not self._flipDims: 
+        if not self._CheckSwapDims(): 
             return self._store.Width
         else:
             return self._store.Height
     
     @property
     def Height(self):
-        if not self._flipDims: 
+        swap = self._rot == Direction.RIGHT or self._rot == Direction.LEFT
+        if not swap: 
             return self._store.Height
         else:
             return self._store.Width
     
-    def __str__(self):
-        output = []
-
-        for y in range(self.Height):
-            output.append("")
-            for x in range(self.Width):
-                output[-1] += self[x, y].__str__()
-
-        return "\n".join(output)
-    
     def IsValidIndex(self, x: int, y: int):
         return x >= 0 and y >= 0 and x < self.Width and y < self.Height
     
-    def RotateRight(self):
-        self._flipDims = not self._flipDims
+    def Reset(self):
+        """Resets all rotation and flips"""
+        self._rot = Direction.UP
+        self._flipHorz = False
+        self._flipVert = False
 
-        if self._indexMod == None:
-            self._indexMod = self._rotRight
-        else:
-            self._indexMod = Mat3.MulMat(self._indexMod, self._rotRight)
+    def IterateAll(self):
+        """Usage: for y, x in map.IterateAll()"""
+        return itertools.product(range(self.Height), range(self.Width))
+    
+    def Spread(self, x: int, y: int, callback):
+        """GoL Tool. Invokes callback(nx: int, ny: int) on all legal neighbors of (x, y)"""
+        width = self.Width - 1
+        height = self.Height - 1
+        if y > 0:
+            if x > 0:
+                callback(x - 1, y - 1)
+            callback(x, y - 1)
+            if x < width:
+                callback(x + 1, y - 1)
+        if x > 0:
+            callback(x - 1, y)
+        if x < width:
+            callback(x + 1, y)
+        if y < height:
+            if x > 0:
+                callback(x - 1, y + 1)
+            callback(x, y + 1)
+            if x < width:
+                callback(x + 1, y + 1)
+    
+    def VisitAll(self, callback):
+        """Invokes callback(x: int, y: int) on all positions"""
+        for y, x in self.IterateAll():
+            callback(x, y)
+
+    def Filter(self, pred, callback):
+        """Invokes callback(val, x: int, y: int) on all positions where pred(val) is True"""
+        for y, x in self.IterateAll():
+            val = self[x, y]
+            if pred(val):
+                callback(val, x, y)
+
+    def Find(self, val):
+        """Finds the first coordinates where the value equals val param"""
+        for y, x in self.IterateAll():
+            t = self[x, y]
+            if t == val:
+                return (x, y)
+        return None
+    
+    def _GetMark(self, x:int, y:int):
+        if self._marks == None:
+            return 0
+        
+        return self._marks[*self._AdjustIndex(x, y)]
+
+    def _IncMark(self, x:int, y:int):
+        self._marks[*self._AdjustIndex(x, y)] += 1
+
+    def _SetMark(self, x:int, y:int, val:int):
+        self._marks[*self._AdjustIndex(x, y)] = val
+
+    def Mark(self, x:int, y:int):
+        if (not self.IsValidIndex(x, y)):
+            return False
+        
+        if self._marks == None:
+            self._marks = _DataMatrixStore(f"{"0" * self._store.Width}\n" * self._store.Height, lambda x: int(x))
+        
+        self._IncMark(x, y)
+        return True
+    
+    def ClearMark(self, x:int, y:int):
+        self._SetMark(x, y, 0)
+
+    def ResetMarks(self):
+        self._marks = None
+
+    def IsMarked(self, x:int, y:int):
+        return self._GetMark(x, y) > 0
+
+    def SumMarks(self):
+        res = 0
+        if self._marks != None:
+            for y, x in self.IterateAll():
+                if self.IsMarked(x, y):
+                    res += 1
+        return res
+    
+    def PrintMarks(self, showCount = False):
+        if self._marks == None:
+            print("no marks")
+            return
+        
+        for y in range(self.Height):
+            print(self._PrintMarks_Line(y, showCount))
+
+    def _PrintMarks_Line(self, y: int, showCount):
+        line = []
+        for x in range(self.Width):
+            val = self._GetMark(x, y)
+            if not showCount:
+                line.append("#" if val > 0 else ".")
+            else:
+                line.append(f"{val}" if val > 0 else ".")
+
+        return "".join(line)
+
+    def RotateRight(self):
+        self._rot = Direction.TurnRight(self._rot)
 
     def RotateLeft(self):
-        self._flipDims = not self._flipDims
-
-        if self._indexMod == None:
-            self._indexMod = self._rotLeft
-        else:
-            self._indexMod = Mat3.MulMat(self._indexMod, self._rotLeft)
+        self._rot = Direction.TurnLeft(self._rot)
 
     def FlipVertical(self):
-        # TODO
-        pass
+        if not self._CheckSwapDims():
+            self._flipVert = not self._flipVert
+        else:
+            self._flipHorz = not self._flipHorz
 
     def FlipHorizontal(self):
-        # TODO
-        pass
+        if not self._CheckSwapDims():
+            self._flipHorz = not self._flipHorz
+        else:
+            self._flipVert = not self._flipVert
 
     def GetColumn(self, x: int):
-        # TODO
-        pass
+        """Usage: gets the col specified by x. Allows -1 for last col."""
+        res = []
+        assert(x == -1 or (x >= 0 and x < self.Width))
+        if x == -1:
+            x = self.Width - 1
+        for y in range(self.Height):
+            res.append(self[x, y])
+        return res
 
     def GetRow(self, y: int):
-        # TODO
-        pass
+        """Usage: gets the row specified by y. Allows -1 for last row."""
+        res = []
+        assert(y == -1 or (y >= 0 and y < self.Height))
+        if y == -1:
+            y = self.Height - 1
+        for x in range(self.Width):
+            res.append(self[x, y])
+        return res
 
 class DataMatrix:
     marks = None
@@ -322,6 +479,9 @@ class DataMatrix:
 
         if type(key) is tuple:
             return self.lines[key[1]][key[0]]
+        
+    def __setitem__(self, key, value):
+        self.Set(key[0], key[1], value)
         
     # This is dumb. I assume hard eggnog was involved.
     def Set(self, x, y, val):
@@ -388,6 +548,14 @@ class DataMatrix:
                 val = self.lines[y][x]
                 if pred(val):
                     callback(val, x, y)
+
+    def Find(self, sym):
+        for y in range(self.Height):
+            for x in range(self.Width):
+                val = self.lines[y][x]
+                if val == sym:
+                    return (x, y)
+        return None
 
     def ScanMarks(self, callback):
         result = []
@@ -475,10 +643,6 @@ class IVec2:
         self._x = x
         self._y = y
 
-    def __init__(self, other):
-        self._x = other[0]
-        self._y = other[1]
-
     def __str__(self):
         return f"<{self._x}, {self._y}>"
 
@@ -494,9 +658,17 @@ class IVec2:
     def X(self) -> int:
         return self._x
 
+    @X.setter
+    def X(self, val):
+        self._x = val
+
     @property
     def Y(self) -> int:
         return self._y
+
+    @Y.setter
+    def Y(self, val):
+        self._y = val
     
     @staticmethod
     def Add(first, second):

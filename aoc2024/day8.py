@@ -51,7 +51,7 @@ input = """..............U.............c.....3...............
 ....b.........1...................................
 .........b................................P......."""
 
-map = aoc.DataMatrix(input)
+map = aoc.DM2(input)
 
 locs = {}
 
@@ -60,7 +60,7 @@ def RecordAnt(val, x, y):
     lst.append([x, y])
     locs[val] = lst
 
-map.Scan(lambda x: x != ".", RecordAnt)
+map.Filter(lambda x: x != ".", RecordAnt)
 
 def DoMarks(pos0, pos1):
     dx = pos0[0] - pos1[0]

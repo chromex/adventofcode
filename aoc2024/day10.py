@@ -44,7 +44,7 @@ input = """3212345678121056780310106543218765210109876
 9232632198124988943287307870568765212167898
 0101789087235677656896478969876890103456787"""
 
-map = aoc.DataMatrix(input)
+map = aoc.DM2(input)
 
 sum = 0
 starts = []
@@ -52,7 +52,7 @@ starts = []
 def RecStart(val, x, y):
     starts.append((x, y))
 
-map.Scan(lambda x: x == "0", RecStart)
+map.Filter(lambda x: x == "0", RecStart)
 
 print(starts)
 

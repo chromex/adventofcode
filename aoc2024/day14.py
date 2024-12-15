@@ -506,7 +506,7 @@ robots = aoc.ParseInputLines("Robot", "x y vx vy", inputlines)
 WIDTH = 101
 HEIGHT = 103
 
-map = aoc.DataMatrix.MakeFromDims(WIDTH, HEIGHT)
+map = aoc.DM2.MakeFromDims(WIDTH, HEIGHT)
 
 def Iter(i):
     global robots

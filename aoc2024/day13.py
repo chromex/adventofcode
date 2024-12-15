@@ -1293,9 +1293,9 @@ for mach in machines:
     L2 = aoc.Line(mach.ay, mach.by, mach.py)
     res = L1.Intersect(L2)
     if res:
-        print(f"Intersect {res}")
+        #print(f"Intersect {res}")
         if res[0] % 1 == 0 and res[1] % 1 == 0:
-            print("Good")
+            #print("Good")
             sum += int(res[0]) * 3 + int(res[1])        
 
 print(sum)
