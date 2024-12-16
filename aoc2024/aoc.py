@@ -203,6 +203,10 @@ class _DataMatrixStore:
                 output[-1] += self.__getitem__((x, y))
 
         return "\n".join(output)
+
+    def SetAll(self, value):
+        for i in range(len(self.data)):
+            self.data[i] = value
     
 # To replace OG DataMatrix:
 # - Marks
@@ -218,8 +222,8 @@ class DM2:
         self._store = _DataMatrixStore(data, convert)
 
     @staticmethod
-    def MakeFromDims(width, height):
-        return DM2(f"{"." * width}\n" * height)
+    def MakeFromDims(width, height, val = "."):
+        return DM2(f"{val * width}\n" * height)
 
     def _AdjustIndex(self, x, y):
         ret = IVec2(x, y)
@@ -263,6 +267,8 @@ class DM2:
         self._store[x, y] = value
 
     def _GetOrigin(self):
+        """It should be said that this is not really the damn origin. Its where the real, unrotated
+        top-left origin is after the rotations are applied. Used in correcting indexing coordinates."""
         match self._rot:
             case Direction.UP:
                 return IVec2(0, 0)
@@ -285,7 +291,11 @@ class DM2:
         for y in range(self.Height):
             output.append("")
             for x in range(self.Width):
-                output[-1] += self[x, y].__str__()
+                output[-1] += self[x, y]
+
+            if self._marks != None:
+                output[-1] += f" | {self._PrintMarks_Line(y, False)}"
+                
         output.append("")
 
         return "\n".join(output)
@@ -385,19 +395,34 @@ class DM2:
         self._SetMark(x, y, 0)
 
     def ResetMarks(self):
-        self._marks = None
+        if self._marks != None:
+            self._marks.SetAll(0)
 
     def IsMarked(self, x:int, y:int):
         return self._GetMark(x, y) > 0
+    
+    def GetMarkTotal(self, x:int, y:int):
+        return self._GetMark(x, y)
 
-    def SumMarks(self):
+    def SumMarks(self, fullCount = False):
+        """Sums up all marked cells. Default is one count per cell unless fullCount is True in which case it uses the full mark count."""
         res = 0
         if self._marks != None:
             for y, x in self.IterateAll():
                 if self.IsMarked(x, y):
-                    res += 1
+                    res += (1 if not fullCount else self.GetMarkTotal(x, y))
         return res
     
+    def ScanMarks(self, callback):
+        """Usage: invokes callback(x, y) for each marked coordinate. Returns a list of results returned by the callback."""
+
+        result = []
+        if self._marks != None:
+            for y, x in self.IterateAll():
+                if self.IsMarked(x, y):
+                    result.append(callback(x, y))
+        return result
+
     def PrintMarks(self, showCount = False):
         if self._marks == None:
             print("no marks")
@@ -405,6 +430,7 @@ class DM2:
         
         for y in range(self.Height):
             print(self._PrintMarks_Line(y, showCount))
+        print()
 
     def _PrintMarks_Line(self, y: int, showCount):
         line = []
@@ -456,6 +482,7 @@ class DM2:
         return res
 
 class DataMatrix:
+    """DEPRECATED: Use DM2 Instead"""
     marks = None
 
     def __init__(self, data: str):

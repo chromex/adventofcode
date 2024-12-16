@@ -53,7 +53,17 @@ def TestDM2():
     map.Mark(0, 0)
     map.RotateRight()
     map.Mark(5, 0)
+
     assert(map.SumMarks() == 2)
+    assert(map.SumMarks(True) == 4)
+
+    map.Reset()
+    map.ResetMarks()
+
+    map.Spread(0, 0, lambda x, y: map.Mark(x, y))
+    map.Spread(1, 1, lambda x, y: map.Mark(x, y))
+    map.Spread(2, 5, lambda x, y: map.Mark(x, y))
+
 
 TestIVec2()
 TestDM2()
