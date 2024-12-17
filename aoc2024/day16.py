@@ -1,4 +1,4 @@
-import aoc
+import aoc, dataclasses
 
 inputdata = """#############################################################################################################################################
 #.#.........#.#.....#.....#...#...................#.........#.......#.....#.......#.........#...#.............#.............#.........#...#E#
@@ -150,7 +150,7 @@ dir = aoc.Direction.EAST
 bestMap = {}
 
 tried = {}
-possible = []
+possible = aoc.Heap(lambda x: x[3])
 score = 0
 x = sx
 y = sy
@@ -166,16 +166,8 @@ def TryAddPossible(move):
         bestMap[key][1].append(move[4])
 
     if key not in tried or tried[key] > move[3]:
-        possible.append(move)
+        possible.Push(move)
         tried[key] = move[3]
-
-def GetLowestCost():
-    low = possible[0]
-    for move in possible:
-        if move[3] < low[3]:
-            low = move
-    possible.remove(low)
-    return low
 
 def GetBestNeigh(move):
     key = move[:3]
@@ -192,7 +184,7 @@ while True:
     TryAddPossible((x, y, aoc.Direction.TurnLeft(dir), score + 1000, move))
     TryAddPossible((x, y, aoc.Direction.TurnRight(dir), score + 1000, move))
 
-    move = GetLowestCost()
+    move = possible.Pop()
 
     if move[0] == ex and move[1] == ey:
         map.Mark(move[0], move[1])
@@ -211,5 +203,4 @@ while True:
     dir = move[2]
     score = move[3]
 
-print(map)
 print(map.SumMarks())

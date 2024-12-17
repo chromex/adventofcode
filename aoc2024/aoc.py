@@ -3,6 +3,8 @@ import itertools
 import math
 import re
 import dataclasses
+import heapq
+import typing
 
 def Pairwise(fn, lstA, lstB):
     return list(fn(x, lstB[ind]) for ind,x in enumerate(lstA))
@@ -14,19 +16,21 @@ def GetFloats(str, spl=" "):
     return list(map(lambda x: float(x), filter(lambda x: x != "", str.split(spl))))
 
 CLASS_STORE = {}
+def _GetProcClass(name, desc):
+    if not name in CLASS_STORE:
+        fields = desc.split(" ")
+        CLASS_STORE[name] = dataclasses.make_dataclass(name, fields)
+    
+    return CLASS_STORE[name]
+
 def ParseInputLine(name, desc, str):
     """Parses the ints in str into a class described by name and desc.
     
     @param name: String name of the class. Nothing special.
     @param desc: String containing the class field names separated by empty spaces."""
     lst = re.findall(r'-?\d+', str)
-
-    if not name in CLASS_STORE:
-        fields = desc.split(" ")
-        assert(len(lst) == len(fields))
-        CLASS_STORE[name] = dataclasses.make_dataclass(name, fields)
     
-    return CLASS_STORE[name](*map(lambda x: int(x), lst))
+    return _GetProcClass(name, desc)(*map(lambda x: int(x), lst))
 
 def ParseInputLines(name, desc, lines):
     """Parses each line in lines as defined by ParseInputLine"""
@@ -34,6 +38,9 @@ def ParseInputLines(name, desc, lines):
     for line in lines:
         res.append(ParseInputLine(name, desc, line))
     return res
+
+def EC(name, desc, vals):
+    return _GetProcClass(name, desc)(*vals)
 
 def SplitEmptyLines(str):
     res = []
@@ -480,6 +487,28 @@ class DM2:
         for x in range(self.Width):
             res.append(self[x, y])
         return res
+
+@dataclasses.dataclass(order=True)
+class _PrioritizedItem:
+    priority: int
+    item: typing.Any=dataclasses.field(compare=False)
+
+class Heap:
+    """Priority queue. Heapq is a bit odd ergonomically when data structures are fluid during implementation. Use this."""
+    _q = []
+
+    def __init__(self, priorityCallback):
+        self._priorityCallback = priorityCallback
+
+    def Push(self, val):
+        pri = self._priorityCallback(val)
+        heapq.heappush(self._q, _PrioritizedItem(pri, val))
+    
+    def Pop(self):
+        ret = None
+        if self._q:
+            ret = heapq.heappop(self._q).item
+        return ret
 
 class DataMatrix:
     """DEPRECATED: Use DM2 Instead"""
