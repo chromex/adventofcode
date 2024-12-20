@@ -5,6 +5,7 @@ import re
 import dataclasses
 import heapq
 import typing
+import sys
 
 def Pairwise(fn, lstA, lstB):
     return list(fn(x, lstB[ind]) for ind,x in enumerate(lstA))
@@ -227,6 +228,7 @@ class DM2:
 
     def __init__(self, data: str, convert=None):
         self._store = _DataMatrixStore(data, convert)
+        self._overlays = {}
 
     @staticmethod
     def MakeFromDims(width, height, val = "."):
@@ -267,7 +269,10 @@ class DM2:
 
     def __getitem__(self, key):
         x, y = self._AdjustIndex(key[0], key[1])
-        return self._store[x, y]
+        if (x, y) not in self._overlays:
+            return self._store[x, y]
+        else:
+            return self._overlays[(x, y)]
 
     def __setitem__(self, key, value):
         x, y = self._AdjustIndex(key[0], key[1])
@@ -450,6 +455,13 @@ class DM2:
 
         return "".join(line)
 
+    def Overlay(self, x, y, val):
+        x, y = self._AdjustIndex(x, y)
+        self._overlays[(x, y)] = val
+
+    def ResetOverlay(self):
+        self._overlays.clear()
+
     def RotateRight(self):
         self._rot = Direction.TurnRight(self._rot)
 
@@ -488,6 +500,86 @@ class DM2:
             res.append(self[x, y])
         return res
 
+    def FindPath(self, start, end, markCells = False):
+        state = _AStarState(self, start, end)
+
+        while not state.OutOfMoves():
+            current = state.GetNextOpen()
+
+            if current == end:
+                if markCells:
+                    state.MarkCells()
+                return (True, state.BuildRoute())
+            
+            x = current[0]
+            y = current[1]
+
+            state.AddOpen(x, y, x - 1, y)
+            state.AddOpen(x, y, x + 1, y)
+            state.AddOpen(x, y, x, y - 1)
+            state.AddOpen(x, y, x, y + 1)
+        
+        return None
+
+###
+# A*
+###
+
+class _AStarState:
+    def __init__(self, map, start, end):
+        self.map = map
+        self.start = start
+        self.end = end
+        self.cameFrom = {}
+        self.gScore = {start: 0}
+        self.fScore = {start: self.H(*start)}
+        self.openSet = set()
+        self.openSet.add(start)
+
+    def H(self, x, y):
+        return self.gScore[(x, y)] + abs(self.end[0] - x) + abs(self.end[1] - y)
+
+    def AddOpen(self, px, py, x, y):
+        if not self.map.IsValidIndex(x, y) or self.map[x, y] == "#":
+            return
+
+        current = (px, py)
+        neighbor = (x, y)
+
+        tentative = self.gScore.setdefault(current, sys.maxsize) + 1
+        if tentative < self.gScore.setdefault(neighbor, sys.maxsize):
+            self.cameFrom[neighbor] = current
+            self.gScore[neighbor] = tentative
+            self.fScore[neighbor] = tentative + self.H(neighbor[0], neighbor[1])
+            if neighbor not in self.openSet:
+                self.openSet.add(neighbor)
+
+    def GetNextOpen(self):
+        ret = next(iter(self.openSet))
+        for cand in self.openSet:
+            if self.fScore[cand] < self.fScore[ret]:
+                ret = cand
+        self.openSet.remove(ret)
+        return ret
+    
+    def OutOfMoves(self):
+        return len(self.openSet) == 0
+    
+    def MarkCells(self):
+        current = self.end
+        self.map.Mark(current[0], current[1])
+        while current != self.start:
+            current = self.cameFrom[current]
+            self.map.Mark(current[0], current[1])
+
+    def BuildRoute(self):
+        current = self.end
+        res = [current]
+        while current != self.start:
+            current = self.cameFrom[current]
+            res.append(current)
+        return list(reversed(res))
+
 @dataclasses.dataclass(order=True)
 class _PrioritizedItem:
     priority: int
@@ -509,6 +601,10 @@ class Heap:
         if self._q:
             ret = heapq.heappop(self._q).item
         return ret
+    
+    @property
+    def empty(self):
+        return len(self._q) > 0
 
 class DataMatrix:
     """DEPRECATED: Use DM2 Instead"""
