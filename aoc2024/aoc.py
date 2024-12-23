@@ -60,6 +60,7 @@ def SplitEmptyLines(str):
     return res
 
 class Mat3:
+    """Under tested. Use with caution."""
     def __init__(self, data=None):
         if data != None:
             self._data = []
@@ -216,10 +217,8 @@ class _DataMatrixStore:
         for i in range(len(self.data)):
             self.data[i] = value
     
-# To replace OG DataMatrix:
-# - Marks
 class DM2:
-    """The ultimate data matrix. Support for fast updates, rotations, flips, the works."""
+    """The ultimate data matrix. Support for fast updates, rotations, flips, overlays, path finding... the works. It puts the team on its back."""
     
     _rot = Direction.UP
     _flipHorz = False
@@ -975,7 +974,7 @@ class Line:
         c = ax * by - bx * ay
         return Line(a, b, -c)
 
-    def Intersect(self, other, onlySegment = False):
+    def Intersect(self, other):
         """Computes the intersection of two lines."""
         D = self.a * other.b - self.b * other.a
         if D != 0:

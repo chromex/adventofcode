@@ -160,7 +160,7 @@ results = {}
 
 def TryCheat(cheatStart, cheatEnd, cheatLen):
     if cheatEnd not in remaining:
-        return
+       return
 
     rem = remaining[cheatStart]    
     cand = remaining[cheatEnd] + cheatLen
@@ -171,24 +171,22 @@ def TryCheat(cheatStart, cheatEnd, cheatLen):
             results[delta] = 0
         results[delta] += 1
 
+maxCheat = 20
+legalOffsets = []
+
+for y in range(-maxCheat, maxCheat + 1):
+    for x in range(-maxCheat, maxCheat + 1):
+        cheatLen = abs(x) + abs(y)
+        if cheatLen <= maxCheat and cheatLen > 1:
+            legalOffsets.append((x, y, cheatLen))
+
 for i in range(len(path) - 1):
     cell = path[i]
 
-    rem = len(path) - i - 1
+    for (x, y, cheatLen) in legalOffsets:
+        cheatEnd = (cell[0] + x, cell[1] + y)
 
-    maxCheat = 20
-
-    for y in range(-maxCheat, maxCheat + 1):
-        for x in range(-maxCheat, maxCheat + 1):
-            cheatEnd = (cell[0] + x, cell[1] + y)
-
-            if not map.IsValidIndex(*cheatEnd):
-                continue
-
-            cheatLen = abs(x) + abs(y)
-            if cheatLen > maxCheat or cheatLen < 2:
-                continue
-
+        if map.IsValidIndex(*cheatEnd):
             TryCheat(cell, cheatEnd, cheatLen)
 
 sum = 0
