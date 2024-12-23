@@ -1541,25 +1541,17 @@ inp = """8651736
 6191404
 372481""".splitlines()
 
-def MP(secret, n):
-    secret = secret ^ n
-    return secret % 16777216
-
 def Next(secret):
-    secret = MP(secret, secret * 64)
-    secret = MP(secret, int(secret / 32))
-    return MP(secret, secret * 2048)
+    secret = (secret ^ (secret * 64)) % 16777216
+    secret = (secret ^ int(secret / 32)) % 16777216
+    return (secret ^ (secret * 2048)) % 16777216
 
-sum = -1
-
-lookup = []
-allSeq = set()
+allRes = {}
 
 for buyer in inp:
     curNum = int(buyer)
     curSeq = tuple()
-
-    results = {}
+    results = set()
 
     for i in range(2000):
         prev = curNum % 10
@@ -1570,19 +1562,14 @@ for buyer in inp:
             curSeq = (curSeq[1], curSeq[2], curSeq[3], delta)
 
             if curSeq not in results:
-                results[curSeq] = nxt
-                allSeq.add(curSeq)
+                results.add(curSeq)
+                allRes[curSeq] = allRes.setdefault(curSeq, 0) + nxt
         else:
             curSeq = (*curSeq, nxt)
 
-    lookup.append(results)
-
-for seq in allSeq:
-    curSum = 0
-    for data in lookup:
-        if seq in data:
-            curSum += data[seq]
-    if curSum > sum:
-        sum = curSum
+sum = 0
+for key in allRes:
+    cur = allRes[key]
+    sum = max(sum, cur)
 
 print(sum)
