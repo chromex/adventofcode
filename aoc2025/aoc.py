@@ -217,7 +217,7 @@ class _DataMatrixStore:
         for i in range(len(self.data)):
             self.data[i] = value
     
-class DM2:
+class DataMatrix:
     """The ultimate data matrix. Support for fast updates, rotations, flips, overlays, path finding... the works. It puts the team on its back."""
     
     _rot = Direction.UP
@@ -231,7 +231,7 @@ class DM2:
 
     @staticmethod
     def MakeFromDims(width, height, val = "."):
-        return DM2(f"{val * width}\n" * height)
+        return DataMatrix(f"{val * width}\n" * height)
 
     def _AdjustIndex(self, x, y):
         ret = IVec2(x, y)
@@ -276,6 +276,9 @@ class DM2:
     def __setitem__(self, key, value):
         x, y = self._AdjustIndex(key[0], key[1])
         self._store[x, y] = value
+
+    def SetValue(self, x, y, value):
+        self[x, y] = value
 
     def _GetOrigin(self):
         """It should be said that this is not really the damn origin. Its where the real, unrotated
@@ -339,38 +342,44 @@ class DM2:
         """Usage: for y, x in map.IterateAll()"""
         return itertools.product(range(self.Height), range(self.Width))
     
-    def Spread(self, x: int, y: int, callback):
-        """GoL Tool. Invokes callback(nx: int, ny: int) on all legal neighbors of (x, y)"""
+    def IterateNeighbors(self, x, y):
+        """Usage: for y, x in map.IterateNeighbors():"""
         width = self.Width - 1
         height = self.Height - 1
         if y > 0:
             if x > 0:
-                callback(x - 1, y - 1)
-            callback(x, y - 1)
+                yield((y - 1, x - 1))
+            yield((y - 1, x))
             if x < width:
-                callback(x + 1, y - 1)
+                yield((y - 1, x + 1))
         if x > 0:
-            callback(x - 1, y)
+            yield((y, x - 1))
         if x < width:
-            callback(x + 1, y)
+            yield((y, x + 1))
         if y < height:
             if x > 0:
-                callback(x - 1, y + 1)
-            callback(x, y + 1)
+                yield((y + 1, x - 1))
+            yield((y + 1, x))
             if x < width:
-                callback(x + 1, y + 1)
+                yield((y + 1, x + 1))
     
     def VisitAll(self, callback):
         """Invokes callback(x: int, y: int) on all positions"""
         for y, x in self.IterateAll():
             callback(x, y)
 
-    def Filter(self, pred, callback):
+    def VisitPred(self, pred, callback):
         """Invokes callback(val, x: int, y: int) on all positions where pred(val) is True"""
         for y, x in self.IterateAll():
             val = self[x, y]
             if pred(val):
                 callback(val, x, y)
+
+    def VisitValue(self, value, callback):
+        """Simplified Visit where callback(x, y) is called on all positions where the value matches"""
+        for y, x in self.IterateAll():
+            if self[x, y] == value:
+                callback(x, y)
 
     def Find(self, val):
         """Finds the first coordinates where the value equals val param"""
@@ -379,6 +388,21 @@ class DM2:
             if t == val:
                 return (x, y)
         return None
+    
+    def CountVal(self, val):
+        """Returns count of specific value in the base map"""
+        res = 0
+        for y, x in self.IterateAll():
+            if self[x, y] == val:
+                res += 1
+        return res
+
+    def CountNeighborVal(self, x, y, val):
+        res = 0
+        for y, x in self.IterateNeighbors(x, y):
+            if self[x, y] == val:
+                res += 1
+        return res
     
     def _GetMark(self, x:int, y:int):
         if self._marks == None:
@@ -424,7 +448,7 @@ class DM2:
                     res += (1 if not fullCount else self.GetMarkTotal(x, y))
         return res
     
-    def ScanMarks(self, callback):
+    def VisitMarks(self, callback):
         """Usage: invokes callback(x, y) for each marked coordinate. Returns a list of results returned by the callback."""
 
         result = []
