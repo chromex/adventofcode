@@ -28,7 +28,11 @@ def ParseInputLine(name, desc, str):
     """Parses the ints in str into a class described by name and desc.
     
     @param name: String name of the class. Nothing special.
-    @param desc: String containing the class field names separated by empty spaces."""
+    @param desc: String containing the class field names separated by empty spaces.
+    
+    Ex: 
+        inputLine = "p=78,57 v=-87,54"
+        ParseInputLine("Robot", "x y vx vy", inputlines)"""
     lst = re.findall(r'-?\d+', str)
     
     return _GetProcClass(name, desc)(*map(lambda x: int(x), lst))
@@ -40,10 +44,9 @@ def ParseInputLines(name, desc, lines):
         res.append(ParseInputLine(name, desc, line))
     return res
 
-def EC(name, desc, vals):
-    return _GetProcClass(name, desc)(*vals)
-
 def SplitEmptyLines(str):
+    """Groups input lines as separated by empties. Useful for puzzle inputs that have multiple entries
+    that are designated by contiguous placement broken by empty lines. """
     res = []
     cur = ""
 
@@ -278,6 +281,7 @@ class DataMatrix:
         self._store[x, y] = value
 
     def SetValue(self, x, y, value):
+        """Useful in lambdas where 'map[x,y] = ?' doesn't work"""
         self[x, y] = value
 
     def _GetOrigin(self):
@@ -376,7 +380,7 @@ class DataMatrix:
                 callback(val, x, y)
 
     def VisitValue(self, value, callback):
-        """Simplified Visit where callback(x, y) is called on all positions where the value matches"""
+        """Simplified VisitPred where callback(x, y) is called on all positions where the value matches"""
         for y, x in self.IterateAll():
             if self[x, y] == value:
                 callback(x, y)
@@ -524,6 +528,8 @@ class DataMatrix:
         return res
 
     def FindPath(self, start, end, markCells = False):
+        """Usage: FindPath((x, y), (nx, ny))
+        Note: This assumes the walls are marked with #"""
         state = _AStarState(self, start, end)
 
         while not state.OutOfMoves():

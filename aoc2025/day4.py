@@ -137,20 +137,13 @@ input = """@@@@..@@@.@.@.@@@@...@@@.@.@@@@.@@@@@@.@@..@@@@@...@@@@@.@@.@...@@..@
 @@@@@.@@...@@@@.@.@@.@@@.@@.@@@...@@@.@..@.@@@@.@.@@@@.@@.@.@@.@.@@@@@@@@@@....@@@.@@..@..@@.@.@@@.@@@@@@@.@@@@..@@@.@@@@...@@@@.@@.@@@.
 @@@@@..@@@@@....@@@@.@@.@@..@@@.@.@.@@@.@.@.@@@.@.@@@@@@@..@@.@@@@.@@@@@.@.@..@@@..@.@@@@@@@@@.@@@..@@@.@@@@..@@@.@@@@.@@@..@@@..@.@.@@."""
 
-sum = 0
-
 dm = aoc.DataMatrix(input)
 
 origSum = dm.CountVal("@")
 lastSum = origSum
 
-def CheckRoll(nx, ny):
-    count = dm.CountNeighborVal(nx, ny, "@")
-    if count < 4:
-        dm.Mark(nx, ny)
-
 while True:
-    dm.VisitValue("@", CheckRoll)
+    dm.VisitValue("@", lambda nx, ny: dm.Mark(nx, ny) if (dm.CountNeighborVal(nx, ny, "@") < 4) else None)
 
     dm.VisitMarks(lambda nx, ny: dm.SetValue(nx, ny, "."))
 
