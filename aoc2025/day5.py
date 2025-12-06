@@ -180,7 +180,7 @@ sum = 0
 ranges = []
 for line in input.splitlines():
     n = aoc.GetInts(line, "-")
-    ranges.append(aoc.Range(n[0], n[1]-n[0]+1))
+    ranges.append(aoc.Range.FromStartEnd(*n))
 
 i = 0
 while (i < (len(ranges)) - 1):

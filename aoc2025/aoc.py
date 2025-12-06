@@ -640,6 +640,10 @@ class Range:
         self.start = start
         self.end = start + length
 
+    @staticmethod
+    def FromStartEnd(start: int, end: int):
+        return Range(start, end - start + 1)
+
     def __str__(self) -> str:
         return f"[{self.start}, {self.end})"
     
