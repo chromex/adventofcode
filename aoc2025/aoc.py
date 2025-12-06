@@ -16,6 +16,9 @@ def GetInts(str, spl=" "):
 def GetFloats(str, spl=" "):
     return list(map(lambda x: float(x), filter(lambda x: x != "", str.split(spl))))
 
+def GetStrings(str, spl=" "):
+    return list(filter(lambda x: x != "", str.split(spl)))
+
 CLASS_STORE = {}
 def _GetProcClass(name, desc):
     if not name in CLASS_STORE:
