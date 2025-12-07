@@ -445,6 +445,10 @@ class DataMatrix:
     
     def GetMarkTotal(self, x:int, y:int):
         return self._GetMark(x, y)
+    
+    def SetMarkTotal(self, x:int, y:int, val:int):
+        self.Mark(x, y)
+        self._SetMark(x, y, val)
 
     def SumMarks(self, fullCount = False):
         """Sums up all marked cells. Default is one count per cell unless fullCount is True in which case it uses the full mark count."""
