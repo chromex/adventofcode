@@ -411,24 +411,31 @@ class DataMatrix:
                 res += 1
         return res
     
+    def _EnsureMarks(self):
+        if self._marks == None:
+            self._marks = _DataMatrixStore(f"{"0" * self._store.Width}\n" * self._store.Height, lambda x: int(x))
+
     def _GetMark(self, x:int, y:int):
+        assert(self.IsValidIndex(x, y))
+
         if self._marks == None:
             return 0
         
         return self._marks[*self._AdjustIndex(x, y)]
 
     def _IncMark(self, x:int, y:int):
+        assert(self.IsValidIndex(x, y))
+        self._EnsureMarks()
         self._marks[*self._AdjustIndex(x, y)] += 1
 
     def _SetMark(self, x:int, y:int, val:int):
+        assert(self.IsValidIndex(x, y))
+        self._EnsureMarks()
         self._marks[*self._AdjustIndex(x, y)] = val
 
     def Mark(self, x:int, y:int):
         if (not self.IsValidIndex(x, y)):
             return False
-        
-        if self._marks == None:
-            self._marks = _DataMatrixStore(f"{"0" * self._store.Width}\n" * self._store.Height, lambda x: int(x))
         
         self._IncMark(x, y)
         return True
@@ -447,7 +454,6 @@ class DataMatrix:
         return self._GetMark(x, y)
     
     def SetMarkTotal(self, x:int, y:int, val:int):
-        self.Mark(x, y)
         self._SetMark(x, y, val)
 
     def SumMarks(self, fullCount = False):
