@@ -551,6 +551,8 @@ for vert in upVert:
         down = GetDownCollision(x + 1, y)
         AddRun(y, [x, down[0].x])
 
+largest = None
+
 def CheckValid(t0, t1):
     minX = min(t0.x, t1.x)
     maxX = max(t0.x, t1.x)
@@ -564,19 +566,40 @@ def CheckValid(t0, t1):
                 found = True
                 break
         if not found:
-            return None
+            return False
     
-    return (maxX - minX + 1) * (maxY - minY + 1)
+    return True
 
-largest = None
+print("Search")
+
+combos = []
 for i in range(len(tiles) - 1):
     for j in range(i + 1, len(tiles)):
         t0 = tiles[i]
         t1 = tiles[j]
+        minX = min(t0.x, t1.x)
+        maxX = max(t0.x, t1.x)
+        minY = min(t0.y, t1.y)
+        maxY = max(t0.y, t1.y)
+        combos.append((t0, t1, (maxX - minX + 1) * (maxY - minY + 1)))
 
-        size = CheckValid(t0, t1)
-        if size != None and (largest == None or size > largest):
-            largest = size
+combos.sort(key=lambda x: x[2], reverse=True)
 
-print(largest)
+for c in combos:
+    t0 = c[0]
+    t1 = c[1]
+    if CheckValid(t0, t1):
+        print(c[2])
+        break
+
+# for i in range(len(tiles) - 1):
+#     for j in range(i + 1, len(tiles)):
+#         t0 = tiles[i]
+#         t1 = tiles[j]
+
+#         size = CheckValid(t0, t1)
+#         if size != None and (largest == None or size > largest):
+#             largest = size
+
+# print(largest)
         
