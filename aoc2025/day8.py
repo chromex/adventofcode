@@ -1009,7 +1009,7 @@ for box in boxes:
     box.circuit = None
 
 def Dist(a, b):
-    return math.sqrt(((a.x - b.x) ** 2) + ((a.y - b.y) ** 2) + ((a.z - b.z) ** 2))
+    return (a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2
 
 heap = aoc.Heap(lambda x: x[0])
 for i in range(len(boxes) - 1):
