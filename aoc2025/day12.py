@@ -1011,10 +1011,6 @@ for line in input.splitlines():
 
     total = width * height
 
-    print(parts)
-    print(total)
-    print(sum(parts[2:]))
-
     if total >= sum(parts[2:]):
         valid += 1
 

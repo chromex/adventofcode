@@ -659,7 +659,6 @@ for name in machines:
             reversed[out] = []
         reversed[out].append(name)
 
-
 def IsDone(name):
     return len(machines[name]) == meta[name][0]
 
