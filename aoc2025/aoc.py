@@ -10,8 +10,8 @@ import sys
 def Pairwise(fn, lstA, lstB):
     return list(fn(x, lstB[ind]) for ind,x in enumerate(lstA))
 
-def GetInts(str, spl=" "):
-    return list(map(lambda x: int(x), filter(lambda x: x != "", str.split(spl))))
+def GetInts(str):
+    return list(map(lambda x: int(x), re.findall(r'-?\d+', str)))
 
 def GetFloats(str, spl=" "):
     return list(map(lambda x: float(x), filter(lambda x: x != "", str.split(spl))))
