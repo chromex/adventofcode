@@ -644,29 +644,13 @@ wdp: kyn nnn
 vex: llo jhh ydi
 hid: out"""
 
-# input = """svr: aaa bbb
-# aaa: fft
-# fft: ccc
-# bbb: tty
-# tty: ccc
-# ccc: ddd eee
-# ddd: hub
-# hub: fff
-# eee: dac
-# dac: fff
-# fff: ggg hhh
-# ggg: out
-# hhh: out"""
-
-sum = 0
-
 machines = {}
 meta = {}
 for line in input.splitlines():
     parts = line.split(" ")
     name = parts[0][:-1]
     machines[name] = parts[1:]
-    meta[name] = [0, 0, name == "dac", name == "fft"] # 0: resolved outputs, 1: total outputs
+    meta[name] = [0, 0]
 
 reversed = {}
 for name in machines:
@@ -675,65 +659,28 @@ for name in machines:
             reversed[out] = []
         reversed[out].append(name)
 
-meta["out"] = [1, 1, False, False]
 
 def IsDone(name):
     return len(machines[name]) == meta[name][0]
 
+meta["out"] = [1, 1]
 doneList = ["out"]
 while not IsDone("svr"):
     cur = doneList.pop()
 
+    if cur == "fft" or cur == "dac":
+        for name in meta:
+            if name != cur:
+                meta[name][1] = 0
+
     nextMachines = reversed[cur]
     metaCur = meta[cur]
-
-    hasDac = metaCur[2] or (cur == "dac")
-    hasFft = metaCur[3] or (cur == "fft")
 
     for mach in nextMachines:
         meta[mach][0] += 1
         meta[mach][1] += metaCur[1]
-        meta[mach][2] = meta[mach][2] or hasDac
-        meta[mach][3] = meta[mach][3] or hasFft
 
-        if IsDone(mach) and mach != "svr":
+        if IsDone(mach):
             doneList.append(mach)
 
-print(meta["dac"])
-print(meta["fft"])
-print(meta["svr"])
-
-searched = set()
-
-def FromTo(start, end):
-    res = 0
-
-    remaining = [(start, False, False)] # 1: dac, 2: fft
-
-    while len(remaining) > 0:
-        current = remaining.pop()
-        name = current[0]
-
-        if name == end:
-            res += 1
-        else:
-            if current[1] and current[2]:
-                for m in machines[name]:
-                    remaining.append((m, True, True))
-                # res += meta[name][1]
-            elif current[1]:
-                for m in machines[name]:
-                    if meta[m][3]:
-                        remaining.append((m, True, m == "fft"))
-            elif current[2]:
-                for m in machines[name]:
-                    if meta[m][2]:
-                        remaining.append((m, m == "dac", True))
-            else:
-                for m in machines[name]:
-                    if meta[m][2] and meta[m][3]:
-                        remaining.append((m, m == "dac", m == "fft"))
-    
-    return res
-
-print(FromTo("svr", "out"))
+print(meta["svr"][1])
